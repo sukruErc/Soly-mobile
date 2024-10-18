@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Media {
-  static MediaQueryData getMediaQuery(BuildContext context) {
-    return MediaQuery.of(context);
+  static double height() {
+    return Get.height;
   }
 
-  static double screenHeight(BuildContext context) {
-    return getMediaQuery(context).size.height;
-  }
-
-  static double screenWidth(BuildContext context) {
-    return getMediaQuery(context).size.width;
+  static double width() {
+    return Get.width;
   }
   
 }

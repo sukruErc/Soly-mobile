@@ -1,26 +1,48 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:solyticket/constants/themes.dart';
 
-import '../constants/color_constant.dart';
+String? nameValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter name";
+  }
+  return null;
+}
+String? dobValidator(String? dob) {
+  if (dob!.isEmpty) {
+    return "Please select date of birth";
+  }
+  return null;
+}
 
-String? Function(String?) get mandatoryValidator =>
-    (String? val) => val?.isEmpty ?? true ? "This field is mandatory" : null;
-
-String? Function(String?) get emailValidator => (String? email) => RegExp(
+String? emailValidator(String? email) {
+  if (email!.isEmpty) {
+    return "Please enter email";
+  } else {
+    if (RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-    ).hasMatch(email ?? "")
-        ? null
-        : "Enter a valid email";
+    ).hasMatch(email.toString())) {
+      return null;
+    } else {
+      return "Enter a valid email";
+    }
+  }
+}
 
-String? Function(String?) get numberValidator =>
-    (String? number) => number?.isEmpty ?? true
-        ? "This field is mandatory"
-        : RegExp(r"^[0-9]*$").hasMatch(number ?? "")
-            ? null
-            : "Enter a valid number";
+String? phoneValidator(String? number) {
+  if (number!.isEmpty) {
+    return "Please enter telephone";
+  } else {
+    if (RegExp(r"^[0-9]*$").hasMatch(number.toString())) {
+      return null;
+    } else {
+      return "Enter a valid telephone";
+    }
+  }
+}
 
 //
 // String parseTime(DateTime time) {
@@ -34,8 +56,16 @@ String? Function(String?) get numberValidator =>
 void pushNamed(BuildContext context, String routeName) =>
     Navigator.pushNamed(context, routeName);
 
-String? Function(String?) get passwordValidator => (String? password) =>
-    (password?.length ?? 0) < 8 ? "Password too short" : null;
+String? passwordValidator(String? password) {
+  if (password!.isEmpty) {
+    return "Please enter password";
+  } else {
+    if (password.length < 8) {
+      return "Password too short";
+    }
+  }
+  return null;
+}
 
 String? validateConfirmPassword(String password, String? confirm) {
   if (password != confirm) {
@@ -79,19 +109,16 @@ void pop(BuildContext context) => Navigator.of(context).pop();
 void popToMain(BuildContext context) =>
     Navigator.of(context).popUntil((route) => route.isFirst);
 
-void snack(BuildContext context, String message,
-    {bool info = true, Color color = Colors.green}) {
-  debugPrint(message);
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: const Duration(milliseconds: 1000),
-    backgroundColor: info ? color : redColor,
-    // behavior: SnackBarBehavior.floating,
-    content: Text(
-      message,
-      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: Colors.white,
-          ),
-    ),
+snack(String message, {bool isError = false}) {
+  return Get.showSnackbar(GetSnackBar(
+    backgroundColor: isError ? Colors.red : Colors.green,
+    message: message,
+    duration: const Duration(seconds: 3),
+    snackStyle: SnackStyle.FLOATING,
+    margin: const EdgeInsets.all(12),
+    borderRadius: 5,
+    isDismissible: true,
+    dismissDirection: DismissDirection.horizontal,
   ));
 }
 
@@ -106,8 +133,6 @@ verticalGap(double size) {
     height: size,
   );
 }
-
-
 
 // Future<File?> pickImage(ImageSource source) async {
 //   final pickedImage =
@@ -141,6 +166,7 @@ RoundedRectangleBorder getRoundShape({double? val}) =>
     RoundedRectangleBorder(borderRadius: getRoundBorder(val: val));
 
 BorderRadius getRoundBorder({double? val}) => BorderRadius.circular(val ?? 30);
+
 Widget getLoader() => const Center(child: CircularProgressIndicator());
 
 void alert(BuildContext context, String message,
@@ -157,7 +183,7 @@ void alert(BuildContext context, String message,
       title: info
           ? Icon(
               icon ?? Icons.check_circle_outline,
-              color: greenColor,
+              color: DefaultTheme().greenColor,
               size: 90,
             )
           : Icon(
