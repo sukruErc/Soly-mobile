@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:solyticket/constants/themes.dart';
 import 'package:solyticket/modules/authentication_module/login/controller/login_controller.dart';

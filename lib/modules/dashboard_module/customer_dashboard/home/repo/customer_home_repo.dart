@@ -9,7 +9,7 @@ class CustomerHomeRepo{
   Future<Response?> getUpcomingEvents(dynamic data) async {
     return await apiClient.getData(
       logs: false,
-      AppConstants.GET_HOME_UPCOMING_EVENTS,
+      AppConstants.getHomeUpcomingEvents,
       // query: data
     );
   }
@@ -17,7 +17,7 @@ class CustomerHomeRepo{
   Future<Response?> getEvents(dynamic data) async {
     return await apiClient.getData(
         logs: false,
-        AppConstants.GET_HOME_RECENT_EVENTS,
+        AppConstants.getHomeRecentEvents,
         // query: data
     );
   }
@@ -25,7 +25,7 @@ class CustomerHomeRepo{
   Future<Response?> getLocations(dynamic data) async {
     return await apiClient.getData(
         logs: false,
-        AppConstants.GET_HOME_LOCATION,
+        AppConstants.getHomeLocation,
         // query: data
     );
   }
@@ -33,7 +33,7 @@ class CustomerHomeRepo{
   Future<Response?> getCategoryCount(dynamic data) async {
     return await apiClient.getData(
         logs: false,
-        AppConstants.GET_HOME_CATEGORY_WITH_COUNT,
+        AppConstants.getHomeCategoryWithCount,
         // query: data
     );
   }

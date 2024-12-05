@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,9 +34,8 @@ class RegistrationController extends GetxController {
           var registerResult = response.data;
           if (registerResult["success"] == true) {
             isLoading.value = false;
-            snack(AppStrings.signUpSuccess);
-            Future.delayed(
-                const Duration(seconds: 3), () => Get.offAndToNamed("login"));
+            var userId = registerResult["data"]["userId"];
+            Get.toNamed("otp",arguments: [userId,passwordController.text]);
           } else {
             isLoading.value = false;
             snack(AppStrings.signUpFailed, isError: true);

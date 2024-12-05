@@ -9,13 +9,13 @@ EventDetailJson eventDetailJsonFromJson(String str) => EventDetailJson.fromJson(
 String eventDetailJsonToJson(EventDetailJson data) => json.encode(data.toJson());
 
 class EventDetailJson {
-  bool success;
-  DateTime date;
-  EventDetail data;
+  bool? success;
+  DateTime? date;
+  EventDetail? data;
 
   EventDetailJson({
-    required this.success,
-    required this.date,
+    this.success,
+    this.date,
     required this.data,
   });
 
@@ -27,8 +27,8 @@ class EventDetailJson {
 
   Map<String, dynamic> toJson() => {
     "success": success,
-    "date": date.toIso8601String(),
-    "data": data.toJson(),
+    "date": date,
+    "data": data,
   };
 }
 

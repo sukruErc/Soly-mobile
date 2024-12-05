@@ -7,7 +7,7 @@ import 'package:solyticket/modules/dashboard_module/organizer_dashboard/my_activ
 class MyActivityController extends GetxController {
 
   MyActivityRepo repo;var myActivityJson =
-      MyActivityJson(success: false, date: "", data: []).obs;
+      MyActivityJson(success: false, date: null, data: []).obs;
 
   MyActivityController(this.repo);
 
@@ -34,7 +34,7 @@ class MyActivityController extends GetxController {
         }
       });
     } catch (e) {
-      print(e);
+      // do nothing here
     }
   }
 }

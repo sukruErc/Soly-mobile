@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:solyticket/constants/themes.dart';
 import 'package:solyticket/modules/splash_module/controller/splash_controller.dart';

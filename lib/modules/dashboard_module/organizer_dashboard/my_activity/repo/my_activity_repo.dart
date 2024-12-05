@@ -9,7 +9,7 @@ class MyActivityRepo{
   Future<Response?> getMyActivities(dynamic data) async {
     return await apiClient.getData(
         logs: false,
-        AppConstants.MY_ACTIVITY,
+        AppConstants.myActivity,
         query: data
     );
   }

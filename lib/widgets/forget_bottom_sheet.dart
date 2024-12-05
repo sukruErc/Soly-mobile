@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:solyticket/constants/themes.dart';
-import 'package:solyticket/widgets/custom_loader_button.dart';
 import 'package:solyticket/widgets/custom_text_form_field.dart';
 
 
 class ForgetPasswordWidget extends StatefulWidget {
   const ForgetPasswordWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<ForgetPasswordWidget> createState() => _ForgetPasswordWidgetState();

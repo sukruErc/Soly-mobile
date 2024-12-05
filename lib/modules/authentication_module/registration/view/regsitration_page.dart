@@ -144,9 +144,7 @@ class RegistrationPage extends GetView<RegistrationController> {
   selectDate(BuildContext context) async {
     DateTime? newSelectedDate = await showDatePicker(
         context: context,
-        initialDate: controller.selectedDate != null
-            ? controller.selectedDate
-            : DateTime.now(),
+        initialDate: controller.selectedDate ?? DateTime.now(),
         firstDate: DateTime(2000),
         lastDate: DateTime(2040),
         builder: (BuildContext context, Widget? child) {

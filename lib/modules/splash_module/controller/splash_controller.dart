@@ -1,19 +1,17 @@
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:solyticket/utills/global.dart';
 class SplashController extends GetxController {
   @override
   void onInit() {
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,overlays: []);
     // TODO: implement onInit
     super.onInit();
+    GlobalClass().checkLoginStatus();
+    GlobalClass().getUserId();
+    GlobalClass().getRoleType();
+    GlobalClass().getName();
     Future.delayed(const Duration(seconds: 3), () {
-      // Get.to(() => const OrganizerDashboardPage());
-      // Get.to(() => const CustomerDashboardPage());
       Get.toNamed("customer-dashboard");
-      // Get.toNamed("login");
-      // Get.to(EventDetailPage());
-
-      // Get.toNamed("login");
     });
   }
 }

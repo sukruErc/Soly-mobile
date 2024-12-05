@@ -26,7 +26,7 @@ class CustomTextFormField extends StatefulWidget {
   final void Function(String)? onChange;
 
   CustomTextFormField({
-    Key? key,
+    super.key,
     this.onTap,
     this.focusNode,
     required this.isLabel,
@@ -47,7 +47,7 @@ class CustomTextFormField extends StatefulWidget {
     this.suffixIcon2,
     this.inputFormatters,
     this.onChange,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();

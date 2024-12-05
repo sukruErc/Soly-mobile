@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -73,7 +72,7 @@ class OrganizerHomePage extends StatelessWidget {
                 child: Text(
                   textAlign: TextAlign.center,
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w400,
@@ -89,7 +88,7 @@ class OrganizerHomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: Text(
                   data,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -110,7 +109,7 @@ class OrganizerHomePage extends StatelessWidget {
             !controller.isLoading.value
                 ? RichText(
                     textAlign: TextAlign.center,
-                    text: TextSpan(
+                    text: const TextSpan(
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       children: [
                         TextSpan(
@@ -293,7 +292,7 @@ class OrganizerHomePage extends StatelessWidget {
                             child: Text(
                               controller.organizerHomeData.value.data!
                                   .mostRecentEvent.eventName,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold),
@@ -316,13 +315,13 @@ class OrganizerHomePage extends StatelessWidget {
                                 child: RichText(
                                   textAlign: TextAlign.center,
                                   text: TextSpan(
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.black, fontSize: 14),
                                     children: [
                                       TextSpan(
                                           text:
                                               "${controller.organizerHomeData.value.data!.mostRecentEvent.date.getMonthShortName()}\n",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 13,
                                             fontWeight: FontWeight.w400,
@@ -381,7 +380,7 @@ class CustomShimmer extends StatelessWidget {
         width: width,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(10)),
-        child: Card(
+        child: const Card(
           elevation: 5,
         ),
       ),

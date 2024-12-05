@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:solyticket/modules/authentication_module/login/bindings/login_binding.dart';
 import 'package:solyticket/modules/authentication_module/login/view/login_page.dart';
+import 'package:solyticket/modules/authentication_module/otp/bindings/otp_binding.dart';
+import 'package:solyticket/modules/authentication_module/otp/view/otp_page.dart';
 import 'package:solyticket/modules/authentication_module/registration/bindings/registration_binding.dart';
 import 'package:solyticket/modules/authentication_module/registration/view/regsitration_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/dashboard/bindings/customer_dashboard_binding.dart';
@@ -29,6 +31,7 @@ class Routes {
   static String customerDashboard = '/customer-dashboard';
   static String organizerDashboard = '/organizer-dashboard';
   static String registration = '/registration';
+  static String otp = '/otp';
   static String customerHome = '/customer-home';
   static String events = '/events';
   static String eventDetails = '/event-detail';
@@ -51,8 +54,13 @@ final getPages = [
   ),
   GetPage(
     name: Routes.registration,
-    page: () => RegistrationPage(),
+    page: () => const RegistrationPage(),
     binding: RegistrationBinding()
+  ),
+  GetPage(
+      name: Routes.otp,
+      page: () => OtpPage(),
+      binding: OtpBinding()
   ),
   GetPage(
     name: Routes.customerHome,
@@ -61,7 +69,7 @@ final getPages = [
   ),
   GetPage(
       name: Routes.events,
-      page: () => EventPage(isFromTab: false,),
+      page: () => const EventPage(isFromTab: false,),
       binding: EventBinding()
   ),
   GetPage(

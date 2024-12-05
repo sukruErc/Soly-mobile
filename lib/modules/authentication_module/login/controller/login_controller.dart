@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:solyticket/model/login_json.dart';
@@ -13,11 +12,6 @@ class LoginController extends GetxController{
   final formKey = GlobalKey<FormState>();
   var isLoading = false.obs;
   LoginController({required this.repo});
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-  }
 
   login() async {
     try{
@@ -32,11 +26,11 @@ class LoginController extends GetxController{
           if(loginResult["success"]==true){
             isLoading.value = false;
             var login = LoginJson.fromJson(loginResult);
+            GlobalClass().setUserInfo(login);
             if(login.data.role[0].name=="soly-cust"){
-              GlobalClass.userRoleType = "soly-cust";
               Get.offAndToNamed("customer-dashboard");
             }else{
-              GlobalClass.userRoleType = "soly-org";
+              Get.offAndToNamed("organizer-dashboard");
             }
           }else{
             isLoading.value = false;

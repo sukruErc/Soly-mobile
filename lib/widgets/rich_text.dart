@@ -7,11 +7,10 @@ class RichTextWidget extends StatefulWidget {
   final String? titleText;
   final VoidCallback onTap;
   const RichTextWidget(
-      {Key? key,
+      {super.key,
       required this.messageText,
       required this.titleText,
-      required this.onTap})
-      : super(key: key);
+      required this.onTap});
 
   @override
   State<RichTextWidget> createState() => _RichTextWidgetState();

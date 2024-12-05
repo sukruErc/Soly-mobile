@@ -10,7 +10,7 @@ MyActivityJson myActivityJsonFromJson(String str) => MyActivityJson.fromJson(jso
 
 class MyActivityJson {
   bool success;
-  var date;
+  DateTime? date;
   List<MyActivity> data;
 
   MyActivityJson({
@@ -102,30 +102,6 @@ class MyActivity {
     totalTickets: json["totalTickets"],
     soldTickets: json["soldTickets"],
   );
-
-  // Map<String, dynamic> toJson() => {
-  //   "id": id,
-  //   "date": date.toIso8601String(),
-  //   "desc": desc,
-  //   "eventName": eventName,
-  //   "image": image,
-  //   "time": time,
-  //   "userId": userId,
-  //   "contractAddress": contractAddress,
-  //   "categoryId": categoryId,
-  //   "categoryTypeId": categoryTypeId,
-  //   "locationId": locationId,
-  //   "priceLabel": priceLabel,
-  //   "createdAt": createdAt.toIso8601String(),
-  //   "updatedAt": updatedAt.toIso8601String(),
-  //   "organizerId": organizerId,
-  //   "eventCategory": eventCategory.toJson(),
-  //   "eventCategoryType": eventCategoryType.toJson(),
-  //   "location": location.toJson(),
-  //   "Tickets": List<dynamic>.from(tickets.map((x) => x.toJson())),
-  //   "totalTickets": totalTickets,
-  //   "soldTickets": soldTickets,
-  // };
 }
 
 class EventCategory {
@@ -144,23 +120,7 @@ class EventCategory {
     name: json["name"],
     image: json["image"]!,
   );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "image": imageValues.reverse[image],
-  };
 }
-
-enum Image {
-  IMAG,
-  IMG
-}
-
-final imageValues = EnumValues({
-  "imag": Image.IMAG,
-  "img": Image.IMG
-});
 
 class EventCategoryType {
   String id;
@@ -208,40 +168,7 @@ class Location {
     image: json["image"]!,
     cityId: json["cityId"],
   );
-
-  // Map<String, dynamic> toJson() => {
-  //   "id": id,
-  //   "name": nameValues.reverse[name],
-  //   "address": addressValues.reverse[address],
-  //   "image": imageValues.reverse[image],
-  //   "cityId": cityId,
-  // };
 }
-
-// enum Address {
-//   CANKURTARAN_34122_FATIH_STANBUL,
-//   SELUK_ZMIR_TRKIYE,
-//   TAKSIM_BEYOLU_STANBUL
-// }
-//
-// final addressValues = EnumValues({
-//   "Cankurtaran, 34122 Fatih/İstanbul": Address.CANKURTARAN_34122_FATIH_STANBUL,
-//   "Selçuk, İzmir, Türkiye": Address.SELUK_ZMIR_TRKIYE,
-//   "Taksim, Beyoğlu, İstanbul": Address.TAKSIM_BEYOLU_STANBUL
-// });
-//
-// enum Name {
-//   AKM,
-//   EFES,
-//   TOPKAP_SARAY
-// }
-//
-// final nameValues = EnumValues({
-//   "AKM": Name.AKM,
-//   "Efes": Name.EFES,
-//   "Topkapı Sarayı": Name.TOPKAP_SARAY
-// });
-
 class Ticket {
   bool isUsed;
   bool sold;

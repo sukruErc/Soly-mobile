@@ -61,18 +61,18 @@ class MyActivityPage extends StatelessWidget {
                               children: [
                                  Text(
                                   myActivityController.myActivityJson.value.data[index].eventName,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 5,),
+                                const SizedBox(height: 5,),
                                 Text("Total Ticket: ${myActivityController.myActivityJson.value.data[index].totalTickets}",
                                     style: TextStyle(
                                         color: Colors.blue[600],
                                         fontSize: 13,
                                         fontWeight: FontWeight.w400)),
-                                SizedBox(height: 2,),
+                                const SizedBox(height: 2,),
                                 Text("Sold Ticket : ${myActivityController.myActivityJson.value.data[index].soldTickets}",
                                     style: TextStyle(
                                         color: Colors.red[300],
@@ -100,23 +100,23 @@ class MyActivityPage extends StatelessWidget {
                             child: RichText(
                                 textAlign: TextAlign.center,
                               text:  TextSpan(
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.black, fontSize: 14),
                                 children: [
                                   TextSpan(
-                                      text: myActivityController.myActivityJson.value.data[index].date.getMonthShortName().toString()+"\n",style: TextStyle(
+                                      text: "${myActivityController.myActivityJson.value.data[index].date.getMonthShortName()}\n",style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
                                   )),
                                   TextSpan(
-                                      text: myActivityController.myActivityJson.value.data[index].date.getDay().toString()+"\n",style: TextStyle(
+                                      text: "${myActivityController.myActivityJson.value.data[index].date.getDay()}\n",style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 25,
                                     fontWeight: FontWeight.bold,
                                   )),
                                   TextSpan(
-                                      text: myActivityController.myActivityJson.value.data[index].date.getYear(),style: TextStyle(
+                                      text: myActivityController.myActivityJson.value.data[index].date.getYear(),style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,

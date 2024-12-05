@@ -8,7 +8,7 @@ class OrganizerHomeRepo{
   Future<Response?> getHomeData(dynamic data) async {
     return await apiClient.getData(
         logs: false,
-        AppConstants.ORGANIZER_HOME_DATA,
+        AppConstants.organizerHomeData,
         query: data
     );
   }

@@ -9,7 +9,7 @@ class RegistrationRepository {
 
   Future<Response?> userRegistration(dynamic data) async {
     return await apiClient.postData(
-      AppConstants.REGISTER_USER,
+      AppConstants.registerUser,
       data,
       logs: false,
     );

@@ -13,7 +13,7 @@ extension MyDateFormat on DateTime {
 extension GetDay on DateTime {
   String? getDay() {
     try {
-      return this.day.toString();
+      return day.toString();
     } catch (e) {
       return null;
     }
@@ -34,7 +34,7 @@ extension GetMonthShortName on DateTime {
 extension GetYear on DateTime {
   String? getYear() {
     try {
-      return this.year.toString();
+      return year.toString();
     } catch (e) {
       return null;
     }

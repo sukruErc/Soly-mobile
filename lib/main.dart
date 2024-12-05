@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:solyticket/common_bindings/internet_connectivity_binding.dart';
 import 'package:solyticket/constants/themes.dart';
 import 'package:solyticket/utills/local_storage.dart';

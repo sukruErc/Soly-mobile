@@ -1,29 +1,26 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DefaultAppBar extends AppBar {
   final Widget? text;
   final bool isShowBottomLine;
-  final bool centerTitle;
-  @override
-  final Color backgroundColor;
-  @override
-  final Widget? leading;
+  final bool isCenterTitle;
+  final Color brgColor;
+  final Widget? leadingWidget;
 
   DefaultAppBar(
       {super.key,
       super.actions,
-      this.leading,
+      this.leadingWidget,
       this.text,
       this.isShowBottomLine = false,
-      this.backgroundColor = Colors.white,
-      required this.centerTitle})
+      this.brgColor = Colors.white,
+      required this.isCenterTitle})
       : super(
-          centerTitle: centerTitle,
-          leading: leading,
-          automaticallyImplyLeading: leading != null ? true : false,
+          centerTitle: isCenterTitle,
+          leading: leadingWidget,
+          automaticallyImplyLeading: leadingWidget != null ? true : false,
           leadingWidth: 70,
-          backgroundColor: backgroundColor,
+          backgroundColor: brgColor,
           title: text,
         );
 }

@@ -33,7 +33,6 @@ class OrganizerHomeController extends GetxController{
       });
     }catch(e){
       isLoading.value = false;
-      print(e);
     }
   }
 }

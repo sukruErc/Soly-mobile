@@ -16,7 +16,7 @@ import 'package:solyticket/widgets/custom_text_form_field.dart';
 class EventPage extends StatefulWidget {
   final bool isFromTab;
 
-  EventPage({super.key, required this.isFromTab});
+  const EventPage({super.key, required this.isFromTab});
 
   @override
   State<EventPage> createState() => _EventPageState();
@@ -203,14 +203,12 @@ class _EventPageState extends State<EventPage> {
           // ),
           verticalGap(15),
           // Divider(height: 0.2,color: Colors.grey[300],),
-          Spacer(),
-          Container(
-            child: Center(
-              child: Text(
-                "Clear Filter",
-                style: textDesigner(15, DefaultTheme().primaryColor,
-                    fontWeight: FontWeight.bold),
-              ),
+          const Spacer(),
+          Center(
+            child: Text(
+              "Clear Filter",
+              style: textDesigner(15, DefaultTheme().primaryColor,
+                  fontWeight: FontWeight.bold),
             ),
           ),
           verticalGap(15),
@@ -222,9 +220,7 @@ class _EventPageState extends State<EventPage> {
   selectDate(BuildContext context) async {
     DateTime? newSelectedDate = await showDatePicker(
         context: context,
-        initialDate: controller.selectedDate != null
-            ? controller.selectedDate
-            : DateTime.now(),
+        initialDate: controller.selectedDate ?? DateTime.now(),
         firstDate: DateTime(2000),
         lastDate: DateTime(2040),
         builder: (BuildContext context, Widget? child) {
@@ -258,11 +254,6 @@ class _EventPageState extends State<EventPage> {
 
   void eventDetail(String eventId) {
     Get.toNamed("event-detail",arguments: eventId);
-    // Get.to(
-    //     () => EventDetailPage(
-    //           eventDetailModel: eventDetailModel,
-    //         ),
-    //     transition: Transition.rightToLeft);
   }
 
   eventListItems(int index) {
@@ -278,12 +269,12 @@ class _EventPageState extends State<EventPage> {
               horizontal: Media.width() * 0.150,
             ),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     bottomLeft: Radius.circular(10)),
                 image: DecorationImage(
                     image: NetworkImage(
-                      AppConstants.IMAGE_BASE_URL +
+                      AppConstants.imageBaseUrl +
                           controller.eventSearchJson.value.data[index].image,
                     ),
                     fit: BoxFit.cover)),
@@ -308,7 +299,7 @@ class _EventPageState extends State<EventPage> {
                                   color: DefaultTheme().primaryColor, size: 18),
                             ),
                           ),
-                          TextSpan(
+                          const TextSpan(
                               // text: controller.eventSearchJson.value.data[index].date),
                               text: "25-07-2024"),
                         ],
@@ -332,7 +323,7 @@ class _EventPageState extends State<EventPage> {
                                   color: DefaultTheme().primaryColor, size: 18),
                             ),
                           ),
-                          TextSpan(
+                          const TextSpan(
                               // text: controller.eventSearchJson.value.data[index].time
                               text: "05:30"),
                         ],
@@ -355,7 +346,7 @@ class _EventPageState extends State<EventPage> {
                         child: Icon(Icons.location_on_outlined,
                             color: DefaultTheme().primaryColor, size: 18),
                       ),
-                      TextSpan(
+                      const TextSpan(
                           // text: controller.eventSearchJson.value.data.location
                           text: "Turkey"),
                     ],

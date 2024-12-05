@@ -4,13 +4,18 @@ class AppStrings {
   static String email = "Email";
   static String password = "Password";
   static String signUp = "Sign Up";
+  static String logout = "Logout";
   static String someThingWrong = "Something went wrong!";
 
   //Login Strings
   static String forgotPassword = "Forgot Password";
   static String donthaveAccount = "Don't have an account?";
   static String loginFailed = "Login failed!";
+  static String otpFailed = "OTP not matched!";
 
+  //OTP
+  static String resendOtp = "Resend OTP";
+  static String otpVerSucc = "OTP varification Successful!";
   //Sign In Strings
   static String signLoginTitle = "Log in";
   static String haveAccount = "Do you have an account?";
@@ -34,5 +39,7 @@ class AppStrings {
   //EventList
   static String searchEvent = "Search Events";
   static String eventTitle = "Events";
+  //Event Detail
+  static String eventDetailTitle = "Event Detail";
 
 }

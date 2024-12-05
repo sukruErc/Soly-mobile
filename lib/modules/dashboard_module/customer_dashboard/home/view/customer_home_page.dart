@@ -5,8 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:solyticket/constants/app_constant.dart';
 import 'package:solyticket/constants/themes.dart';
 import 'package:solyticket/modules/authentication_module/login/view/login_page.dart';
-import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/view/event_detail_page.dart';
-import 'package:solyticket/model/event_detail_model.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/view/event_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/controller/customer_home_controller.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/repo/customer_home_repo.dart';
@@ -14,6 +12,7 @@ import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/view
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/view/widget/title_subtitle_widget.dart';
 import 'package:solyticket/modules/dashboard_module/organizer_dashboard/home/view/organizer_home_page.dart';
 import 'package:solyticket/providers/api_client.dart';
+import 'package:solyticket/utills/global.dart';
 import 'package:solyticket/utills/media.dart';
 import 'package:solyticket/utills/snippets.dart';
 import 'package:solyticket/utills/strings.dart';
@@ -35,11 +34,29 @@ class CustomerHomePage extends StatelessWidget {
         isAppBar: true,
         title: AppBarLogo().setLogo(),
         action: [
-          IconButton(
-              onPressed: () {
-                Get.offAll(const LoginPage());
-              },
-              icon: const Icon(Icons.lock))
+          GlobalClass.isLogin
+              ? InkWell(
+                  onTap: () async {
+                   await GlobalClass().resetUserInfo();
+                   Get.toNamed("login");
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 15.0),
+                    child: Text(
+                      AppStrings.logout,
+                      style: textDesigner(
+                        16,
+                        fontWeight: FontWeight.w600,
+                        DefaultTheme().primaryColor,
+                      ),
+                    ),
+                  ),
+                )
+              : IconButton(
+                  onPressed: () {
+                    Get.toNamed("login");
+                  },
+                  icon: const Icon(Icons.lock))
         ],
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -93,7 +110,7 @@ class CustomerHomePage extends StatelessWidget {
         ),
         InkWell(
             onTap: () {
-              Get.to(EventPage(isFromTab: false));
+              Get.to(const EventPage(isFromTab: false));
             },
             child: const SeeAllButton()),
       ],
@@ -127,56 +144,67 @@ class CustomerHomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
                       controller.recentEventList.value.data.length,
-                          (index) => Card(child: Stack(
-                            children: [
-                              Container(
-                                height: Media.height() * 0.2,
-                                width: Media.width(),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: const DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/upcoming_event_img.jpeg'),
-                                      fit: BoxFit.fill),
-                                ),
-                              ),
-                              Positioned(
-                                  top: Media.height() * 0.1,
-                                  left: Media.width() * 0.050,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('100-200',
-                                          style: textDesigner(
-                                            15,
-                                            DefaultTheme().whiteColor,
-                                          )),
-                                      Text(
-                                        controller.recentEventList.value.data[index].eventName,
-                                        style: textDesigner(23, DefaultTheme().whiteColor,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      (index) => InkWell(
+                        onTap: (){
+                          Get.toNamed("event-detail",arguments: controller.recentEventList.value.data[index].id);
+                        },
+                        child: Card(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: Media.height() * 0.2,
+                                    width: Media.width(),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: const DecorationImage(
+                                          image: AssetImage(
+                                              'assets/images/upcoming_event_img.jpeg'),
+                                          fit: BoxFit.fill),
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: Media.height() * 0.1,
+                                      left: Media.width() * 0.050,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Text('June 15',
+                                          Text('100-200',
                                               style: textDesigner(
                                                 15,
                                                 DefaultTheme().whiteColor,
                                               )),
-                                          horizontalGap(10),
                                           Text(
-                                            'Summer Beats',
+                                            controller.recentEventList.value
+                                                .data[index].eventName,
                                             style: textDesigner(
-                                                15, DefaultTheme().whiteColor,
+                                                23, DefaultTheme().whiteColor,
                                                 fontWeight: FontWeight.bold),
                                           ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('June 15',
+                                                  style: textDesigner(
+                                                    15,
+                                                    DefaultTheme().whiteColor,
+                                                  )),
+                                              horizontalGap(10),
+                                              Text(
+                                                'Summer Beats',
+                                                style: textDesigner(
+                                                    15, DefaultTheme().whiteColor,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                            ],
+                                          )
                                         ],
-                                      )
-                                    ],
-                                  )),
-                            ],
-                          ),)),
+                                      )),
+                                ],
+                              ),
+                            ),
+                      )),
                 ),
               ),
             ],
@@ -224,10 +252,8 @@ class CustomerHomePage extends StatelessWidget {
                                     ),
                                   ),
                                   verticalGap(5),
-                                  Text(controller
-                                          .catCountList.value.data[index].count
-                                          .toString() +
-                                      " Event"),
+                                  Text(
+                                      "${controller.catCountList.value.data[index].count} Event"),
                                 ],
                               ),
                             ),
@@ -254,7 +280,7 @@ class CustomerHomePage extends StatelessWidget {
             children: List.generate(
                 5,
                 (index) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: CustomShimmer(
                           height: Media.height() * 0.150,
                           width: Media.width() * 0.3),
@@ -303,7 +329,7 @@ class CustomerHomePage extends StatelessWidget {
                   width: Media.width() * 0.8,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
+                    image: const DecorationImage(
                         image: NetworkImage(
                             "https://ipfs.io/ipfs/QmR17RUjimQpqUz3mCJBdYgJWgvkpwRLcSzun87NDE6jrB"),
                         fit: BoxFit.cover),
@@ -372,17 +398,11 @@ class CustomerHomePage extends StatelessWidget {
                       controller.recentEventList.value.data.length, (index) {
                     return InkWell(
                       onTap: () {
-                        // EventDetailModel eventDetailModel =
-                        //     controller.eventDetailData[index];
-                        //
-                        // Get.to(
-                        //     () => EventDetailPage(
-                        //         eventDetailModel: eventDetailModel),
-                        //     transition: Transition.rightToLeft);
+                        Get.toNamed("event-detail",arguments: controller.recentEventList.value.data[index].id);
                       },
                       child: Card(
                         elevation: 5,
-                        margin: EdgeInsets.only(right: 15, left: 3),
+                        margin: const EdgeInsets.only(right: 15, left: 3),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -397,7 +417,7 @@ class CustomerHomePage extends StatelessWidget {
                                       topRight: Radius.circular(10)),
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                        AppConstants.IMAGE_BASE_URL +
+                                        AppConstants.imageBaseUrl +
                                             controller.recentEventList.value
                                                 .data[index].image,
                                       ),
@@ -531,7 +551,7 @@ class CustomerHomePage extends StatelessWidget {
             children: List.generate(
                 5,
                 (index) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: CustomShimmer(
                           height: Media.height() * 0.25,
                           width: Media.width() * 0.50),
@@ -582,7 +602,7 @@ class CustomerHomePage extends StatelessWidget {
             children: List.generate(
                 5,
                 (index) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: CustomShimmer(
                           height: Media.height() * 0.25, width: Media.width()),
                     )),
@@ -607,7 +627,9 @@ class CustomerHomePage extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           image: DecorationImage(
-                              image: NetworkImage(AppConstants.IMAGE_BASE_URL+item.image), fit: BoxFit.fill),
+                              image: NetworkImage(
+                                  AppConstants.imageBaseUrl + item.image),
+                              fit: BoxFit.fill),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,

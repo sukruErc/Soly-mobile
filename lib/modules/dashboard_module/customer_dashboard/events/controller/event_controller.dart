@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:solyticket/model/event_detail_model.dart';
 import 'package:solyticket/model/event_search_json.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/repo/event_repo.dart';
 

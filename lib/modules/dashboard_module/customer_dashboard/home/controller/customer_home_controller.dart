@@ -34,29 +34,38 @@ class CustomerHomeController extends GetxController {
       try {
         var upcomingEventResult = json.decode(results[0]!.data);
         if (upcomingEventResult["success"] == true) {
-          upcomingEventList.value = UpcomingEventJson.fromJson(upcomingEventResult);
+          upcomingEventList.value =
+              UpcomingEventJson.fromJson(upcomingEventResult);
         }
-      } catch (e) {}
+      } catch (e) {
+        // do nothing here
+      }
       try {
         var recentEventResult = json.decode(results[1]!.data);
         if (recentEventResult["success"] == true) {
           recentEventList.value = RecentEventJson.fromJson(recentEventResult);
         }
-      } catch (e) {}
+      } catch (e) {
+        // do nothing here
+      }
       try {
         var locationResult = json.decode(results[2]!.data);
         if (locationResult["success"] == true) {
           locationList.value = LocationJson.fromJson(locationResult);
         }
-      } catch (e) {}
+      } catch (e) {
+        // do nothing here
+      }
       try {
         var catCountResult = json.decode(results[3]!.data);
         if (catCountResult["success"] == true) {
           catCountList.value = CategoryCountJson.fromJson(catCountResult);
         }
-      } catch (e) {}
+      } catch (e) {
+        // do nothing here
+      }
     } catch (e) {
-      print(e);
+      // do nothing here
     }
   }
 
@@ -175,56 +184,56 @@ class CustomerHomeController extends GetxController {
     }
   }
 
-  // RxList locationList = [
-  //   {
-  //     'title': 'Efes',
-  //     'subTitle': 'Selcuk, izmir, Turkiye',
-  //     'image': 'assets/images/location_img_1.jpg',
-  //   },
-  //   {
-  //     'title': 'AKM',
-  //     'subTitle': 'Taksim, Beyoglu, Istanbul',
-  //     'image': 'assets/images/location_img_2.jpg',
-  //   },
-  //   {
-  //     'title': 'CSO ADA Ankara',
-  //     'subTitle': 'Talatpasa Bulvari, o: 38 Opera, 06330 Altindag/Ankara',
-  //     'image': 'assets/images/location_img_3.jpg',
-  //   },
-  //   {
-  //     'title': 'Topkapi Sarayi',
-  //     'subTitle': 'Cankurtaran, 34122 Fatin/Istanbul',
-  //     'image': 'assets/images/location_img_4.jpg',
-  //   },
-  //   {
-  //     'title': 'California',
-  //     'subTitle': 'United State of America',
-  //     'image': 'assets/images/location_img_5.jpg',
-  //   },
-  //   {
-  //     'title': 'California',
-  //     'subTitle': 'United State of America',
-  //     'image': 'assets/images/location_img_5.jpg',
-  //   },
-  //   {
-  //     'title': 'California',
-  //     'subTitle': 'United State of America',
-  //     'image': 'assets/images/location_img_5.jpg',
-  //   },
-  //   {
-  //     'title': 'California',
-  //     'subTitle': 'United State of America',
-  //     'image': 'assets/images/location_img_5.jpg',
-  //   },
-  //   {
-  //     'title': 'California',
-  //     'subTitle': 'United State of America',
-  //     'image': 'assets/images/location_img_5.jpg',
-  //   },
-  //   {
-  //     'title': 'California',
-  //     'subTitle': 'United State of America',
-  //     'image': 'assets/images/location_img_5.jpg',
-  //   },
-  // ].obs;
+// RxList locationList = [
+//   {
+//     'title': 'Efes',
+//     'subTitle': 'Selcuk, izmir, Turkiye',
+//     'image': 'assets/images/location_img_1.jpg',
+//   },
+//   {
+//     'title': 'AKM',
+//     'subTitle': 'Taksim, Beyoglu, Istanbul',
+//     'image': 'assets/images/location_img_2.jpg',
+//   },
+//   {
+//     'title': 'CSO ADA Ankara',
+//     'subTitle': 'Talatpasa Bulvari, o: 38 Opera, 06330 Altindag/Ankara',
+//     'image': 'assets/images/location_img_3.jpg',
+//   },
+//   {
+//     'title': 'Topkapi Sarayi',
+//     'subTitle': 'Cankurtaran, 34122 Fatin/Istanbul',
+//     'image': 'assets/images/location_img_4.jpg',
+//   },
+//   {
+//     'title': 'California',
+//     'subTitle': 'United State of America',
+//     'image': 'assets/images/location_img_5.jpg',
+//   },
+//   {
+//     'title': 'California',
+//     'subTitle': 'United State of America',
+//     'image': 'assets/images/location_img_5.jpg',
+//   },
+//   {
+//     'title': 'California',
+//     'subTitle': 'United State of America',
+//     'image': 'assets/images/location_img_5.jpg',
+//   },
+//   {
+//     'title': 'California',
+//     'subTitle': 'United State of America',
+//     'image': 'assets/images/location_img_5.jpg',
+//   },
+//   {
+//     'title': 'California',
+//     'subTitle': 'United State of America',
+//     'image': 'assets/images/location_img_5.jpg',
+//   },
+//   {
+//     'title': 'California',
+//     'subTitle': 'United State of America',
+//     'image': 'assets/images/location_img_5.jpg',
+//   },
+// ].obs;
 }

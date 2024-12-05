@@ -15,7 +15,7 @@ class DefaultAppLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: this.isAppBar ? DefaultAppBar(text: title,actions: action,centerTitle: centerTitle,leading: leading,) : null,
+      appBar: isAppBar ? DefaultAppBar(text: title,actions: action,isCenterTitle: centerTitle,leadingWidget: leading,) : null,
       backgroundColor: DefaultTheme().backgroundColor,
       resizeToAvoidBottomInset: true,
       body: child,

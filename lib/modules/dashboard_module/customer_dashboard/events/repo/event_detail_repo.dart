@@ -9,7 +9,7 @@ class EventDetailRepo{
   Future<Response?> eventDetail(dynamic data) async {
     return await apiClient.getData(
         logs: false,
-        AppConstants.EVENT_DETAIL,
+        AppConstants.eventDetail,
         query: data
     );
   }

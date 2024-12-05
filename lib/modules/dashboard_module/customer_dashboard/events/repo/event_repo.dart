@@ -8,7 +8,7 @@ class EventRepo{
   Future<Response?> eventSearch(dynamic data) async {
     return await apiClient.getData(
         logs: false,
-        AppConstants.EVENT_SEARCH,
+        AppConstants.eventSearch,
         query: data
     );
   }
@@ -16,7 +16,7 @@ class EventRepo{
   Future<Response?> eventFilter(dynamic data) async {
     return await apiClient.getData(
         logs: false,
-        AppConstants.EVENT_FILTER,
+        AppConstants.eventFilter,
         query: data
     );
   }

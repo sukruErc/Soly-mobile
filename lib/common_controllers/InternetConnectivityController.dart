@@ -1,12 +1,11 @@
-// import 'dart:async';
-// import 'package:connectivity_plus/connectivity_plus.dart';
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter/services.dart';
-// import 'package:get/get.dart';
-
 import 'package:get/get.dart';
 
 class InternetConnectivityController extends GetxController {
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
   // final _connectionType = MConnectivityResult.none.obs;
   // late final Connectivity connectivity;
   //

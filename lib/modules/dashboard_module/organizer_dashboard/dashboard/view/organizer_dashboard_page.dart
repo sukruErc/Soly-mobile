@@ -24,7 +24,7 @@ class OrganizerDashboardPage extends GetView<OrganizerDashboardController> {
         },
         children: [
           OrganizerHomePage(),
-          SizedBox(),
+          const SizedBox(),
           MyActivityPage(),
         ],
       ),

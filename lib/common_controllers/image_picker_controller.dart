@@ -12,7 +12,6 @@ class ImagePickerController extends GetxController {
       );
 
       if (photo != null) {
-        print('photo: ${photo.path}');
         image.value = photo;
       } else {
         

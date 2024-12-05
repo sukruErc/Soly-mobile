@@ -11,6 +11,6 @@ class LoginRepository {
 
   Future<Response?> userLogin(dynamic data) async {
     return await apiClient
-        .postData(AppConstants.LOGIN_URL,data, logs: false);
+        .postData(AppConstants.loginUrl,data, logs: false);
   }
 }
