@@ -5,8 +5,8 @@ import 'package:solyticket/modules/dashboard_module/customer_dashboard/location/
 import 'package:solyticket/utills/media.dart';
 import 'package:solyticket/utills/widget_formats.dart';
 
-class LocationPage extends GetView<LocationController> {
-  const LocationPage({super.key});
+class LocationPage extends GetView<LocationController>{
+  LocationPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -29,10 +29,11 @@ class LocationPage extends GetView<LocationController> {
             style: textDesigner(23, DefaultTheme().primaryColor, fontWeight: FontWeight.bold),
           ),
         ),
-        body: ListView.builder(
+        body: controller.locationList.value.data.isNotEmpty?ListView.builder(
           padding: const EdgeInsets.all(5),
-          itemCount: controller.locationList.length,
+          itemCount: controller.locationList.value.data.length,
           itemBuilder: (context, index) {
+            final item = controller.locationList.value.data[index];
             return Stack(
               children: [
                 Container(
@@ -43,8 +44,8 @@ class LocationPage extends GetView<LocationController> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
-                        image: AssetImage(
-                            controller.locationList[index]['image']),
+                        image: NetworkImage(
+                            "https://gateway.pinata.cloud/ipfs/"+item.image),
                         fit: BoxFit.cover),
                   ),
                 ),
@@ -55,7 +56,7 @@ class LocationPage extends GetView<LocationController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          controller.locationList[index]['title'],
+                          item.name,
                           style: textDesigner(23, DefaultTheme().whiteColor,
                               fontWeight: FontWeight.bold),
                         ),
@@ -64,7 +65,7 @@ class LocationPage extends GetView<LocationController> {
               ],
             );
           },
-        ),
+        ):Center(child: CircularProgressIndicator()),
       ),
     );
   }

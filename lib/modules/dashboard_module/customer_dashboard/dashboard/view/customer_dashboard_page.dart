@@ -29,7 +29,7 @@ class CustomerDashboardPage extends GetView<CustomerDashboardController> {
           CustomerHomePage(),
           const EventPage(isFromTab:true),
           const SizedBox(),
-          const LocationPage(),
+          LocationPage(),
           const ProfilePage(),
         ],
       ),

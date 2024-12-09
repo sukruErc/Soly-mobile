@@ -12,15 +12,43 @@ class EventController extends GetxController {
   final TextEditingController textEditingController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   late bool isSearchShow = false;
+  late bool isFromTab = false;
   late var isSearchLoading = false.obs;
 
-  EventController(this.eventRepo);
+  EventController(this.eventRepo,this.isFromTab);
+  @override
+  onInit(){
+    if(!isFromTab){
+
+    }
+    super.onInit();
+  }
 
   searchEvents(String searchText) async {
     try{
       isSearchLoading(true);
       Map<String, dynamic> data = {"value": searchText};
       await eventRepo.eventSearch(data).then((response) {
+        if (response!.statusCode == 200) {
+          var searchResult = json.decode(response.data);
+          if(searchResult["success"]==true){
+            isSearchLoading(false);
+            eventSearchJson.value = EventSearchJson.fromJson(searchResult);
+          }else{
+            isSearchLoading(false);
+          }
+        }
+      });
+    }catch(e){
+      isSearchLoading(false);
+    }
+  }
+
+  getFilteredEvents(String searchText) async {
+    try{
+      isSearchLoading(true);
+      Map<String, dynamic> data = {"value": searchText};
+      await eventRepo.eventFilter(data).then((response) {
         if (response!.statusCode == 200) {
           var searchResult = json.decode(response.data);
           if(searchResult["success"]==true){

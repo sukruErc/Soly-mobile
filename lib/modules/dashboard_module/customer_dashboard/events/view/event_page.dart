@@ -16,18 +16,18 @@ import 'package:solyticket/widgets/custom_text_form_field.dart';
 class EventPage extends StatefulWidget {
   final bool isFromTab;
 
-  const EventPage({super.key, required this.isFromTab});
+   const EventPage({super.key, required this.isFromTab});
 
   @override
   State<EventPage> createState() => _EventPageState();
 }
 
 class _EventPageState extends State<EventPage> {
-  final EventController controller =
-      Get.put(EventController(EventRepo(apiClient: ApiClient())));
-
+  late EventController controller;
   @override
   void initState() {
+    controller =
+        Get.put(EventController(EventRepo(apiClient: ApiClient()),widget.isFromTab));
     // TODO: implement initState
     super.initState();
   }

@@ -305,7 +305,7 @@ class CustomerHomePage extends StatelessWidget {
         InkWell(
             onTap: () {
               controller.isFromTab.value = false;
-              Get.toNamed("events");
+              Get.toNamed("location");
             },
             child: const SeeAllButton()),
       ],

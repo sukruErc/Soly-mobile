@@ -6,6 +6,7 @@ class AppConstants{
   static const String userVerify = 'users/verify';
   static const String getHomeRecentEvents = 'homepage/get-recent-events';
   static const String getHomeLocation = 'homepage/get-locations-for-homepage';
+  static const String getLocations = 'filter-type/get-locations-in-cities';
   static const String getHomeCategoryWithCount = 'homepage/get-categories-with-count';
   static const String getHomeUpcomingEvents = 'homepage/get-newly-sales';
   static const String eventSearch = 'filter-type/search-category-event-organizer';

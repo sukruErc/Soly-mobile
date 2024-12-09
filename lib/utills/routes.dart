@@ -79,7 +79,7 @@ final getPages = [
   ),
   GetPage(
       name: Routes.location,
-      page: () => const LocationPage(),
+      page: () => LocationPage(),
       binding: LocationBindings()
   ),
   GetPage(

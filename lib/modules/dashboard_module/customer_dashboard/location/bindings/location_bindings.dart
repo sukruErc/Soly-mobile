@@ -7,6 +7,6 @@ class LocationBindings extends Bindings{
   @override
   void dependencies() {
     // TODO: implement dependencies
-    Get.put(LocationController(LocationRepo(apiClient: ApiClient())));
+    final LocationController controller = Get.put(LocationController(locationRepo: LocationRepo(apiClient: ApiClient())));
   }
 }
