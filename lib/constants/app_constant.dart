@@ -15,4 +15,9 @@ class AppConstants{
   static const String eventDetail = 'events/get-event-by-id';
   static const String organizerHomeData = 'https://test.solyticket.com/api/v1/users/get-organizers-dashboard-for-mobile';
   static const String myActivity = 'https://test.solyticket.com/api/v1/events/get-events-by-creator';
+static const String collectionList = 'collection/get-collection-with-ownes';
+static const String redeemCoupon = 'collection/redeem-coupon';
+static const String getUserInfo = 'users';
+static const String updateUserInfo = 'users';
+static const String getUserTickets = 'users/get-tickets-of-user';
 }

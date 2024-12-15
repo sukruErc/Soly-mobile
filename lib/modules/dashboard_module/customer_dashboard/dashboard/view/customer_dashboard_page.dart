@@ -4,7 +4,7 @@ import 'package:solyticket/constants/themes.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/dashboard/controller/customer_dashboard_controller.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/view/event_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/view/customer_home_page.dart';
-import 'package:solyticket/modules/dashboard_module/customer_dashboard/location/view/location_page.dart';
+import 'package:solyticket/modules/dashboard_module/customer_dashboard/collection/view/collection_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/profile/view/profile_page.dart';
 import 'package:solyticket/utills/images.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
@@ -29,8 +29,8 @@ class CustomerDashboardPage extends GetView<CustomerDashboardController> {
           CustomerHomePage(),
           const EventPage(isFromTab:true),
           const SizedBox(),
-          LocationPage(),
-          const ProfilePage(),
+           CollectionPage(),
+           ProfilePage(),
         ],
       ),
       bottomNavigationBar: Container(

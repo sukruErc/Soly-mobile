@@ -302,12 +302,12 @@ class CustomerHomePage extends StatelessWidget {
                 fontWeight: FontWeight.bold),
           ),
         ),
-        InkWell(
-            onTap: () {
-              controller.isFromTab.value = false;
-              Get.toNamed("location");
-            },
-            child: const SeeAllButton()),
+        // InkWell(
+        //     onTap: () {
+        //       controller.isFromTab.value = false;
+        //       Get.toNamed("location");
+        //     },
+        //     child: const SeeAllButton()),
       ],
     );
   }

@@ -12,8 +12,8 @@ import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/vi
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/view/event_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/bindings/customer_home_binding.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/view/customer_home_page.dart';
-import 'package:solyticket/modules/dashboard_module/customer_dashboard/location/bindings/location_bindings.dart';
-import 'package:solyticket/modules/dashboard_module/customer_dashboard/location/view/location_page.dart';
+import 'package:solyticket/modules/dashboard_module/customer_dashboard/collection/bindings/collection_bindings.dart';
+import 'package:solyticket/modules/dashboard_module/customer_dashboard/collection/view/collection_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/profile/bindings/profile_binding.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/profile/view/profile_page.dart';
 import 'package:solyticket/modules/dashboard_module/organizer_dashboard/dashboard/bindings/organizer_dashboard_binding.dart';
@@ -35,7 +35,7 @@ class Routes {
   static String customerHome = '/customer-home';
   static String events = '/events';
   static String eventDetails = '/event-detail';
-  static String location = '/location';
+  static String collection = '/collection';
   static String profile = '/profile';
   static String organizerHome = '/organizer-home';
   static String myActivity = '/my-activity';
@@ -43,71 +43,56 @@ class Routes {
 
 final getPages = [
   GetPage(
-    name: Routes.splash,
-    page: () => const SplashPage(),
-    binding: SplashBinding()
-  ),
+      name: Routes.splash,
+      page: () => const SplashPage(),
+      binding: SplashBinding()),
   GetPage(
-    name: Routes.login,
-    page: () => const LoginPage(),
-    binding: LoginBinding()
-  ),
+      name: Routes.login,
+      page: () => const LoginPage(),
+      binding: LoginBinding()),
   GetPage(
-    name: Routes.registration,
-    page: () => const RegistrationPage(),
-    binding: RegistrationBinding()
-  ),
+      name: Routes.registration,
+      page: () => const RegistrationPage(),
+      binding: RegistrationBinding()),
+  GetPage(name: Routes.otp, page: () => OtpPage(), binding: OtpBinding()),
   GetPage(
-      name: Routes.otp,
-      page: () => OtpPage(),
-      binding: OtpBinding()
-  ),
-  GetPage(
-    name: Routes.customerHome,
-    page: () => CustomerHomePage(),
-    binding: CustomerHomeBinding()
-  ),
+      name: Routes.customerHome,
+      page: () => CustomerHomePage(),
+      binding: CustomerHomeBinding()),
   GetPage(
       name: Routes.events,
-      page: () => const EventPage(isFromTab: false,),
-      binding: EventBinding()
-  ),
+      page: () => const EventPage(
+            isFromTab: false,
+          ),
+      binding: EventBinding()),
   GetPage(
       name: Routes.eventDetails,
       page: () => EventDetailPage(),
-      binding: EventBinding()
+      binding: EventBinding()),
+  GetPage(
+    name: "/collection",
+    page: () => CollectionPage(),
+    binding: CollectionBindings(),
   ),
   GetPage(
-      name: Routes.location,
-      page: () => LocationPage(),
-      binding: LocationBindings()
+    name: Routes.profile,
+    page: () => ProfilePage(),
+    binding: ProfileBinding(),
   ),
-  GetPage(
-      name: Routes.profile,
-      page: () => const ProfilePage(),
-      binding: ProfileBinding()
-  ),
-
   GetPage(
       name: Routes.organizerHome,
       page: () => OrganizerHomePage(),
-      binding: OrganizerHomeBinding()
-  ),
-
+      binding: OrganizerHomeBinding()),
   GetPage(
       name: Routes.myActivity,
       page: () => MyActivityPage(),
-      binding: MyActivityBinding()
-  ),
-
+      binding: MyActivityBinding()),
   GetPage(
       name: Routes.customerDashboard,
       page: () => const CustomerDashboardPage(),
-      binding: CustomerDashboardBinding()
-  ),
+      binding: CustomerDashboardBinding()),
   GetPage(
       name: Routes.organizerDashboard,
       page: () => const OrganizerDashboardPage(),
-      binding: OrganizerDashboardBinding()
-  ),
+      binding: OrganizerDashboardBinding()),
 ];

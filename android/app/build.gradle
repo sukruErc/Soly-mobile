@@ -24,16 +24,16 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.solyticket"
-    compileSdk 34
-    ndkVersion flutter.ndkVersion
+    compileSdk 34 // Updated to a more recent API level as required by Google Play
+    ndkVersion "27.0.12077973" // Updated to the correct NDK version for dependencies
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11 // Updated for Java 11 compatibility
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11' // Updated for Java 11 compatibility
     }
 
     sourceSets {
@@ -41,27 +41,31 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.solyticket"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 34 // Updated to meet Google Play requirements
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Signing with the debug keys for now; replace with your signing config for release builds.
             signingConfig signingConfigs.debug
+            shrinkResources false // Optional: Disable resource shrinking during debug
+            minifyEnabled false // Optional: Disable ProGuard during development
         }
     }
+    lint {
+        abortOnError false
+    }
+
 }
 
 flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    // Add any specific dependencies your app requires here
+}

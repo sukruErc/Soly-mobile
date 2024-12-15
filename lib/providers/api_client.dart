@@ -20,14 +20,34 @@ class ApiClient {
       Map<String, dynamic>? query,
       bool ignoreExceptions = false,
       bool logs = true}) async {
-    return await _dio.post(AppConstants.baseUrl + uri!,
-        data: body, options: Options(method: "POST", headers: headers));
+    return await _dio.post(
+      AppConstants.baseUrl + uri!,
+      data: body,
+      options: Options(method: "POST", headers: headers),
+    );
+  }
+
+  Future<Response> putData(String uri, dynamic body,
+      {Map<String, String>? headers,
+      Map<String, dynamic>? query,
+      bool logs = true}) async {
+    try {
+      return await _dio.put(
+        AppConstants.baseUrl + uri,
+        data: body,
+        queryParameters: query,
+        options: Options(method: "PUT", headers: headers),
+      );
+    } catch (e) {
+      if (logs) {
+        print("Error in PUT request to $uri: $e");
+      }
+      rethrow;
+    }
   }
 }
 
 class DioClient {
-  //flutter run --no-sound-null-safety -d chrome --web-port=1234
-
   static final DioClient _instance = DioClient._();
 
   DioClient._();
@@ -36,12 +56,12 @@ class DioClient {
 
   Dio getDioClient() {
     final Dio dio = Dio(BaseOptions(
-        baseUrl: '',
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
-        sendTimeout: const Duration(seconds: 30),
-        maxRedirects: 3));
-    // onHTTPCreate(dio);
+      baseUrl: '',
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 30),
+      maxRedirects: 3,
+    ));
     return dio;
   }
 }

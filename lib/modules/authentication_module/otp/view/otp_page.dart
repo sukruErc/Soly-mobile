@@ -5,7 +5,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:solyticket/constants/themes.dart';
 import 'package:solyticket/modules/authentication_module/otp/controller/otp_controller.dart';
 import 'package:solyticket/utills/snippets.dart';
-import 'package:solyticket/utills/strings.dart';
+
 
 class OtpPage extends GetView<OtpController> {
   OtpPage({super.key});
