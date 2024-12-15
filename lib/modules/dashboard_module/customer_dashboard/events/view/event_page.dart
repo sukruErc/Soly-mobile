@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:solyticket/constants/app_constant.dart';
 import 'package:solyticket/constants/themes.dart';
+import 'package:solyticket/model/category_type.dart';
+import 'package:solyticket/model/filters_json.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/controller/event_controller.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/repo/event_repo.dart';
 import 'package:solyticket/providers/api_client.dart';
@@ -16,7 +18,7 @@ import 'package:solyticket/widgets/custom_text_form_field.dart';
 class EventPage extends StatefulWidget {
   final bool isFromTab;
 
-   const EventPage({super.key, required this.isFromTab});
+  const EventPage({super.key, required this.isFromTab});
 
   @override
   State<EventPage> createState() => _EventPageState();
@@ -24,10 +26,11 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   late EventController controller;
+
   @override
   void initState() {
-    controller =
-        Get.put(EventController(EventRepo(apiClient: ApiClient()),widget.isFromTab));
+    controller = Get.put(
+        EventController(EventRepo(apiClient: ApiClient()), widget.isFromTab));
     // TODO: implement initState
     super.initState();
   }
@@ -52,17 +55,35 @@ class _EventPageState extends State<EventPage> {
                     ),
                   ),
                 )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.eventSearchJson.value.data.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        eventDetail(controller.eventSearchJson.value.data[index].id);
-                      },
-                      child: eventListItems(index),
-                    );
-                  }),
+              : widget.isFromTab
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.eventSearchJson.value.data.length,
+                      itemBuilder: (context, index) {
+                        final item =
+                            controller.eventSearchJson.value.data[index];
+                        return InkWell(
+                          onTap: () {
+                            eventDetail(controller
+                                .eventSearchJson.value.data[index].id);
+                          },
+                          child: eventListItems(item),
+                        );
+                      })
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.eventFilterJson.value.data.length,
+                      itemBuilder: (context, index) {
+                        final item =
+                            controller.eventFilterJson.value.data[index];
+                        return InkWell(
+                          onTap: () {
+                            eventDetail(controller
+                                .eventFilterJson.value.data[index].id);
+                          },
+                          child: eventListItems(item),
+                        );
+                      }),
         ));
   }
 
@@ -105,110 +126,187 @@ class _EventPageState extends State<EventPage> {
             color: Colors.grey[300],
           ),
           verticalGap(15),
-          // Container(
-          //   height: 60,
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(8.0),
-          //     child: ListView(scrollDirection: Axis.horizontal,children: [
-          //       Chip(
-          //         label: const Text(
-          //             "Developer",
-          //             style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400)),
-          //         elevation: 0,
-          //         backgroundColor: Colors.blue.withOpacity(0.8),
-          //         side: const BorderSide(width: 0),
-          //         deleteIconColor: Colors.white,
-          //         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
-          //         onDeleted: () {
-          //           // filterController.removeSelectedChip(index);
-          //         },
-          //         deleteIcon: Icon(
-          //           Icons.close,
-          //           size: 20,
-          //         ),
-          //       ),
-          //       horizontalGap(10),
-          //       Chip(
-          //         label: const Text(
-          //             "Consultant",
-          //             style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400)),
-          //         elevation: 0,
-          //         backgroundColor: Colors.blue.withOpacity(0.8),
-          //         side: const BorderSide(width: 0),
-          //         deleteIconColor: Colors.white,
-          //         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
-          //         onDeleted: () {
-          //           // filterController.removeSelectedChip(index);
-          //         },
-          //         deleteIcon: Icon(
-          //           Icons.close,
-          //           size: 20,
-          //         ),
-          //       ),
-          //     ],),
-          //   ),
-          // ),
-          // verticalGap(15),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CustomTextFormField(
-              maxLine: 1,
-              labelText: '',
-              hintText: 'Select Date',
-              controller: controller.textEditingController,
-              suffixIcon: Icons.date_range,
-              fillerColor: Colors.white,
-              isLabel: false,
-              onTap: () {
-                selectDate(context);
-              },
-              focusNode: AlwaysDisabledFocusNode(),
+          SizedBox(
+            height: 250,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: CustomTextFormField(
+                      maxLine: 1,
+                      labelText: '',
+                      hintText: 'Select Date',
+                      controller: controller.textEditingController,
+                      suffixIcon: Icons.date_range,
+                      fillerColor: Colors.white,
+                      isLabel: false,
+                      onTap: () {
+                        selectDate(context);
+                      },
+                      focusNode: AlwaysDisabledFocusNode(),
+                    ),
+                  ),
+                  verticalGap(15),
+                  Obx(() => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: DropdownButtonFormField<String>(
+                          value: controller.selectedSortOrder.value,
+                          decoration: InputDecoration(
+                            hintText: 'Select Sort Order...',
+                            suffixIcon: controller.selectedSortOrder.value ==
+                                    null
+                                ? null
+                                : IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    onPressed: () {
+                                      controller.selectedSortOrder.value = null;
+                                      applyFilter();
+                                    }),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(
+                                  color: DefaultTheme().textFieldColor),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(
+                                  color: DefaultTheme().textFieldColor),
+                            ),
+                          ),
+                          onChanged: (newValue) {
+                            controller.selectedSortOrder.value = newValue;
+                            applyFilter();
+                          },
+                          items: controller.filtersJson.value.data?.orderTypes
+                              .map<DropdownMenuItem<String>>((OrderType value) {
+                            return DropdownMenuItem<String>(
+                              value: value.id,
+                              child: Text(value.name),
+                            );
+                          }).toList(),
+                        ),
+                      )),
+                  verticalGap(15),
+                  Obx(() => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: DropdownButtonFormField<String>(
+                          value: controller.selectedLocationId.value,
+                          decoration: InputDecoration(
+                            hintText: 'Select Location ID...',
+                            suffixIcon:
+                                controller.selectedLocationId.value == null
+                                    ? null
+                                    : IconButton(
+                                        icon: const Icon(Icons.clear),
+                                        onPressed: () {
+                                          controller.selectedLocationId.value =
+                                              null;
+                                          applyFilter();
+                                        }),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(
+                                  color: DefaultTheme().textFieldColor),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(
+                                  color: DefaultTheme().textFieldColor),
+                            ),
+                          ),
+                          onChanged: (newValue) {
+                            controller.selectedLocationId.value = newValue;
+                            applyFilter();
+                          },
+                          items: controller.filtersJson.value.data?.locations
+                              .map<DropdownMenuItem<String>>((Location value) {
+                            return DropdownMenuItem<String>(
+                              value: value.id,
+                              child: Text(value.name),
+                            );
+                          }).toList(),
+                        ),
+                      )),
+                  verticalGap(15),
+                  Obx(() => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: DropdownButtonFormField<String>(
+                          value: controller.selectedCatId.value,
+                          decoration: InputDecoration(
+                            hintText: 'Select Category...',
+                            suffixIcon: controller.selectedCatId.value == null
+                                ? null
+                                : IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    onPressed: () {
+                                      controller.selectedCatId.value = null;
+                                      applyFilter();
+                                    }),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(
+                                  color: DefaultTheme().textFieldColor),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(
+                                  color: DefaultTheme().textFieldColor),
+                            ),
+                          ),
+                          onChanged: (newValue) {
+                            controller.selectedCatId.value = newValue;
+                            controller.catTypeList.value = [];
+                            var ct = controller
+                                .filtersJson.value.data!.categories
+                                .firstWhere((e) =>
+                                    e.id == controller.selectedCatId.value);
+                            for (var cat in ct.categoryType) {
+                              CategoryType cg = CategoryType();
+                              cg.id = cat.id;
+                              cg.name = cat.name;
+                              cg.isSelected = false;
+                              controller.catTypeList.add(cg);
+                            }
+                            applyFilter();
+                          },
+                          items: controller.filtersJson.value.data?.categories
+                              .map<DropdownMenuItem<String>>((Category value) {
+                            return DropdownMenuItem<String>(
+                              value: value.id,
+                              child: Text(value.name),
+                            );
+                          }).toList(),
+                        ),
+                      )),
+                  verticalGap(15),
+                  Obx(() => controller.selectedCatId.value == null
+                      ? Container()
+                      : showCategoryType()),
+                ],
+              ),
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: CustomDropdown<String>(
-          //     hintText: 'Select',
-          //     decoration: CustomDropdownDecoration(
-          //         closedBorder: Border.all(color: textFieldColor)),
-          //     items: list,
-          //     onChanged: (value) {
-          //       log('changing value to: $value');
-          //     },
-          //   ),
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: CustomDropdown<String>(
-          //     hintText: 'Select',
-          //     decoration: CustomDropdownDecoration(
-          //         closedBorder: Border.all(color: textFieldColor)),
-          //     items: controller.list,
-          //     onChanged: (value) {
-          //       log('changing value to: $value');
-          //     },
-          //   ),
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: CustomDropdown<String>(
-          //     hintText: 'Select',
-          //     decoration: CustomDropdownDecoration(
-          //         closedBorder: Border.all(color: textFieldColor)),
-          //     items: controller.list,
-          //     onChanged: (value) {
-          //       log('changing value to: $value');
-          //     },
-          //   ),
-          // ),
-          verticalGap(15),
-          // Divider(height: 0.2,color: Colors.grey[300],),
           const Spacer(),
-          Center(
-            child: Text(
-              "Clear Filter",
-              style: textDesigner(15, DefaultTheme().primaryColor,
-                  fontWeight: FontWeight.bold),
+          GestureDetector(
+            onTap: (){
+              controller.clearFilter();
+            },
+            child: Center(
+              child: Text(
+                "Clear Filter",
+                style: textDesigner(15, DefaultTheme().primaryColor,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           verticalGap(15),
@@ -218,33 +316,29 @@ class _EventPageState extends State<EventPage> {
   }
 
   selectDate(BuildContext context) async {
-    DateTime? newSelectedDate = await showDatePicker(
-        context: context,
-        initialDate: controller.selectedDate ?? DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2040),
-        builder: (BuildContext context, Widget? child) {
-          return Theme(
-            data: ThemeData.dark().copyWith(
-              colorScheme: const ColorScheme.dark(
-                primary: Colors.blue,
-                onPrimary: Colors.white,
-                surface: Colors.white,
-                onSurface: Colors.black,
-              ),
-              dialogBackgroundColor: Colors.blue[500],
+    DateTimeRange? newSelectedDate = await showDateRangePicker(
+      context: context,
+      // initialDate: controller.selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2040),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: Colors.blue,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
             ),
-            child: child!,
-          );
-        });
+            dialogBackgroundColor: Colors.blue[500],
+          ),
+          child: child!,
+        );
+      },
+    );
 
     if (newSelectedDate != null) {
-      controller.selectedDate = newSelectedDate;
-      controller.textEditingController
-        ..text = DateFormat.yMMMd().format(controller.selectedDate!)
-        ..selection = TextSelection.fromPosition(TextPosition(
-            offset: controller.textEditingController.text.length,
-            affinity: TextAffinity.upstream));
+      controller.setDate(newSelectedDate);
     }
   }
 
@@ -253,10 +347,10 @@ class _EventPageState extends State<EventPage> {
   }
 
   void eventDetail(String eventId) {
-    Get.toNamed("event-detail",arguments: eventId);
+    Get.toNamed("event-detail", arguments: eventId);
   }
 
-  eventListItems(int index) {
+  eventListItems(var item) {
     return Card(
       elevation: 5,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
@@ -274,8 +368,7 @@ class _EventPageState extends State<EventPage> {
                     bottomLeft: Radius.circular(10)),
                 image: DecorationImage(
                     image: NetworkImage(
-                      AppConstants.imageBaseUrl +
-                          controller.eventSearchJson.value.data[index].image,
+                      AppConstants.imageBaseUrl + item.image,
                     ),
                     fit: BoxFit.cover)),
           ),
@@ -333,7 +426,7 @@ class _EventPageState extends State<EventPage> {
                 ),
                 verticalGap(12),
                 Text(
-                  controller.eventSearchJson.value.data[index].name,
+                  item.name,
                   style: textDesigner(18, DefaultTheme().blackColor,
                       fontWeight: FontWeight.bold),
                 ),
@@ -407,6 +500,51 @@ class _EventPageState extends State<EventPage> {
               icon: Icon(Icons.filter_alt, color: DefaultTheme().primaryColor))
           : Container()
     ];
+  }
+
+  showCategoryType() {
+    return Wrap(
+      direction: Axis.horizontal,
+      children: List.generate(controller.catTypeList.length, (index) {
+        return GestureDetector(
+          onTap: () {
+            controller.setCategoryType(index);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: controller.catTypeList[index].isSelected
+                      ? Colors.blue
+                      : Colors.white,
+                  border: Border.all(width: 0.5),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  controller.catTypeList[index].name,
+                  style: TextStyle(
+                      color: controller.catTypeList[index].isSelected
+                          ? Colors.white
+                          : Colors.black),
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  void applyFilter() {
+    controller.getFilteredEvents(
+        controller.selectedLocationId.value,
+        controller.selectedCatId.value,
+        controller.selectedCatTypeId.value,
+        controller.startDate,
+        controller.endDate,
+        "date",
+        controller.selectedSortOrder.value);
   }
 }
 

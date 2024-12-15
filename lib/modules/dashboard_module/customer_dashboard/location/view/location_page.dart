@@ -65,7 +65,7 @@ class LocationPage extends GetView<LocationController>{
               ],
             );
           },
-        ):Center(child: CircularProgressIndicator()),
+        ):const Center(child: CircularProgressIndicator()),
       ),
     );
   }

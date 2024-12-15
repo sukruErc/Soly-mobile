@@ -20,4 +20,11 @@ class EventRepo{
         query: data
     );
   }
+
+  Future<Response?> getFilters() async {
+    return await apiClient.getData(
+        logs: false,
+        AppConstants.getFilters,
+    );
+  }
 }

@@ -11,6 +11,7 @@ class AppConstants{
   static const String getHomeUpcomingEvents = 'homepage/get-newly-sales';
   static const String eventSearch = 'filter-type/search-category-event-organizer';
   static const String eventFilter = 'events/get-events-by-filter';
+  static const String getFilters = 'filter-type/get-event-page-filters';
   static const String eventDetail = 'events/get-event-by-id';
   static const String organizerHomeData = 'https://test.solyticket.com/api/v1/users/get-organizers-dashboard-for-mobile';
   static const String myActivity = 'https://test.solyticket.com/api/v1/events/get-events-by-creator';
