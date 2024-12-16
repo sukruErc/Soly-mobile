@@ -1,45 +1,47 @@
 class AppStrings {
-  //Common Strings
-  static String login = "Login";
-  static String email = "Email";
-  static String password = "Password";
-  static String signUp = "Sign Up";
-  static String logout = "Logout";
-  static String someThingWrong = "Something went wrong!";
+  // Ortak Metinler
+  static String login = "Giriş Yap";
+  static String email = "E-posta";
+  static String password = "Şifre";
+  static String confirmPassword = "Şifreyi Onaylayın";
+  static String signUp = "Kayıt Ol";
+  static String logout = "Çıkış Yap";
+  static String someThingWrong = "Bir şeyler yanlış gitti!";
 
-  //Login Strings
-  static String forgotPassword = "Forgot Password";
-  static String donthaveAccount = "Don't have an account?";
-  static String loginFailed = "Login failed!";
-  static String otpFailed = "OTP not matched!";
+  // Giriş Ekranı Metinleri
+  static String forgotPassword = "Şifremi Unuttum";
+  static String donthaveAccount = "Hesabınız yok mu?";
+  static String loginFailed = "Giriş başarısız!";
+  static String otpFailed = "OTP eşleşmedi!";
 
-  //OTP
-  static String resendOtp = "Resend OTP";
-  static String otpVerSucc = "OTP varification Successful!";
-  //Sign In Strings
-  static String signLoginTitle = "Log in";
-  static String haveAccount = "Do you have an account?";
-  static String createAccountHeader = "Create Your Account";
-  static String signUpSuccess = "Registration successful!";
-  static String signUpFailed = "Registration failed!";
-  static String txtFldPassword = "Registration failed!";
-  static String txtFldName = "Name";
-  static String txtFldTelephone = "Telephone";
-  static String txtFldDob = "Date of birth";
+  // OTP
+  static String resendOtp = "OTP'yi Tekrar Gönder";
+  static String otpVerSucc = "OTP Doğrulama Başarılı!";
+  
+  // Kayıt Ol Ekranı Metinleri
+  static String signLoginTitle = "Giriş Yap";
+  static String haveAccount = "Zaten bir hesabınız var mı?";
+  static String createAccountHeader = "Hesabınızı Oluşturun";
+  static String signUpSuccess = "Kayıt başarılı!";
+  static String signUpFailed = "Kayıt başarısız!";
+  static String txtFldPassword = "Şifre";
+  static String txtFldName = "Ad Soyad";
+  static String txtFldTelephone = "Telefon";
+  static String txtFldDob = "Doğum Tarihi";
 
-  //Customer dashboard strings
-  static String becomeMember = "Become a Member";
-  static String upComingEvents = "Upcoming Events";
-  static String seeAll = "See all";
-  static String discoverFun = "Discover the Fun!";
-  static String entertainmentGuide = "Entertainment Guide";
-  static String recentEvent = "Recent Events";
-  static String discoverVanue = "Discover Venues Around You";
+  // Müşteri Dashboard Metinleri
+  static String becomeMember = "Üye Ol";
+  static String upComingEvents = "Yaklaşan Etkinlikler";
+  static String seeAll = "Tümünü Gör";
+  static String discoverFun = "Eğlenceyi Keşfedin!";
+  static String entertainmentGuide = "Eğlence Rehberi";
+  static String recentEvent = "Son Etkinlikler";
+  static String discoverVanue = "Çevrenizdeki Mekanları Keşfedin";
 
-  //EventList
-  static String searchEvent = "Search Events";
-  static String eventTitle = "Events";
-  //Event Detail
-  static String eventDetailTitle = "Event Detail";
+  // Etkinlik Listesi
+  static String searchEvent = "Etkinlik Ara";
+  static String eventTitle = "Etkinlikler";
 
+  // Etkinlik Detayları
+  static String eventDetailTitle = "Etkinlik Detayı";
 }

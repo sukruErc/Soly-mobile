@@ -18,21 +18,33 @@ class LoginPage extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultAppLayout(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              headerImageAndTitle(context),
-              verticalGap(30),
-              loginInputs(),
-              const ForgetPasswordWidget(),
-              verticalGap(50),
-              loginButton(),
-              verticalGap(100),
-              signUpFooter()
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Get.offAllNamed('/customer-dashboard'); // Dashboard'a git ve stack'i sıfırla
+          },
+        ),
+      ),
+      body: DefaultAppLayout(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                headerImageAndTitle(context),
+                verticalGap(30),
+                loginInputs(),
+                const ForgetPasswordWidget(),
+                verticalGap(50),
+                loginButton(),
+                verticalGap(100),
+                signUpFooter(),
+              ],
+            ),
           ),
         ),
       ),
@@ -47,10 +59,9 @@ class LoginPage extends GetView<LoginController> {
           width: Media.width() * 0.240,
           image: const AssetImage(AppImages.logo),
         ),
-        Text(
-          AppStrings.login,
-          style: textDesigner(23, DefaultTheme().blackColor,
-              fontWeight: FontWeight.bold),
+        const Text(
+          "Giriş Yap",
+          style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold, color: Colors.black),
         ),
       ],
     );
@@ -64,8 +75,8 @@ class LoginPage extends GetView<LoginController> {
         children: [
           CustomTextFormField(
             maxLine: 1,
-            labelText: AppStrings.email,
-            hintText: AppStrings.email,
+            labelText: "E-posta",
+            hintText: "E-posta adresinizi girin",
             controller: controller.emailController,
             prefixIcon: Icons.email,
             validator: emailValidator,
@@ -74,13 +85,12 @@ class LoginPage extends GetView<LoginController> {
           const SizedBox(height: 20),
           CustomTextFormField(
             maxLine: 1,
-            labelText: AppStrings.password,
-            hintText: AppStrings.password,
+            labelText: "Şifre",
+            hintText: "Şifrenizi girin",
             controller: controller.passwordController,
             prefixIcon: Icons.lock,
             suffixIcon: Icons.visibility,
             suffixIcon2: Icons.visibility_off,
-            // validator: passwordValidator,
             isVisible: true,
             isLabel: true,
           ),
@@ -91,10 +101,9 @@ class LoginPage extends GetView<LoginController> {
 
   loginButton() {
     return Obx(() => CustomLoaderButton(
-          btnText: AppStrings.login,
+          btnText: "Giriş Yap",
           onTap: () async {
-            if(controller.formKey.currentState!
-                .validate()){
+            if (controller.formKey.currentState!.validate()) {
               controller.login();
             }
           },
@@ -104,10 +113,11 @@ class LoginPage extends GetView<LoginController> {
 
   signUpFooter() {
     return RichTextWidget(
-        messageText: AppStrings.donthaveAccount,
-        titleText: AppStrings.signUp,
-        onTap: () {
-          Get.toNamed("registration");
-        });
+      messageText: "Hesabınız yok mu? ",
+      titleText: "Kayıt Ol",
+      onTap: () {
+        Get.toNamed("registration");
+      },
+    );
   }
 }

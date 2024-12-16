@@ -1,26 +1,26 @@
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 
 class ImagePickerController extends GetxController {
-  Rxn<XFile> image = Rxn<XFile>();
-  final ImagePicker picker = ImagePicker();
+  // Rxn<XFile> image = Rxn<XFile>();
+  // final ImagePicker picker = ImagePicker();
 
   Future<void> selectImage({bool? isCamera}) async {
     try {
-      final XFile? photo = await picker.pickImage(
-        source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
-      );
+      // final XFile? photo = await picker.pickImage(
+      //   source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
+      // );
 
-      if (photo != null) {
-        image.value = photo;
-      } else {
+      // if (photo != null) {
+      //   image.value = photo;
+      // } else {
         
-        Get.snackbar(
-          'No Image Selected',
-          'No image was selected from the gallery.',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
+      //   Get.snackbar(
+      //     'No Image Selected',
+      //     'No image was selected from the gallery.',
+      //     snackPosition: SnackPosition.BOTTOM,
+      //   );
+      // }
     } catch (e) {
       Get.snackbar(
         'Error',

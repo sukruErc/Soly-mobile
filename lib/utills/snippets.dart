@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:solyticket/constants/themes.dart';
 
@@ -84,19 +84,19 @@ String standardFormatTime(DateTime dataTime) {
   return formatter.format(dataTime);
 }
 
-Future<File?> pickImage(ImageSource source) async {
-  final pickedImage =
-      await ImagePicker().pickImage(source: source, imageQuality: 30);
-  if (pickedImage != null) {
-    return File(pickedImage.path);
-  } else {
-    // ignore: unnecessary_statements
-    ("image is not selected");
-  }
-  return null;
-  // final bytes = await pickedImage!.readAsBytes();
-  // return base64Encode(bytes);
-}
+// Future<File?> pickImage(ImageSource source) async {
+//   final pickedImage =
+//       await ImagePicker().pickImage(source: source, imageQuality: 30);
+//   if (pickedImage != null) {
+//     return File(pickedImage.path);
+//   } else {
+//     // ignore: unnecessary_statements
+//     ("image is not selected");
+//   }
+//   return null;
+//   // final bytes = await pickedImage!.readAsBytes();
+//   // return base64Encode(bytes);
+// }
 
 Future<T?> push<T>(BuildContext context, Widget child) =>
     Navigator.of(context).push<T>(MaterialPageRoute(builder: (_) => child));
