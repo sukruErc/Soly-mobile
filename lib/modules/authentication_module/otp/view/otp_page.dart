@@ -6,154 +6,144 @@ import 'package:solyticket/constants/themes.dart';
 import 'package:solyticket/modules/authentication_module/otp/controller/otp_controller.dart';
 import 'package:solyticket/utills/snippets.dart';
 
-
 class OtpPage extends GetView<OtpController> {
   OtpPage({super.key});
   final userId = Get.arguments[0];
   final password = Get.arguments[1];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: Obx(() =>
-          SingleChildScrollView(
-            child: SizedBox(
-              width: Get.width,
-              height: Get.height,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top:Get.height*0.15),
-                      child: Text(
-                        "OTP",
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                              fontSize: 32,
-                              color: DefaultTheme().black,
-                              fontWeight: FontWeight.w600,
-                            )),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Get.offAllNamed("registration");
+          },
+        ),
+        title: Text(
+          "Hesap Doğrulama",
+          style: GoogleFonts.poppins(
+            color: DefaultTheme().black,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Obx(
+        () => SingleChildScrollView(
+          child: SizedBox(
+            width: Get.width,
+            height: Get.height,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "6 Haneli Doğrulama Kodunu Girin",
+                    style: GoogleFonts.poppins(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: DefaultTheme().primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Kayıtlı e-posta adresinize doğrulama kodu gönderildi.",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  Form(
+                    key: controller.formOTPKey,
+                    child: PinCodeTextField(
+                      appContext: context,
+                      length: 6,
+                      obscureText: false,
+                      animationType: AnimationType.fade,
+                      keyboardType: TextInputType.number,
+                      autoFocus: true,
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(8),
+                        fieldHeight: 50,
+                        fieldWidth: 40,
+                        activeFillColor: Colors.white,
+                        inactiveFillColor: Colors.white,
+                        selectedFillColor: Colors.white,
+                        activeColor: DefaultTheme().primaryColor,
+                        inactiveColor: Colors.grey.shade300,
+                        selectedColor: DefaultTheme().primaryColor,
+                      ),
+                      cursorColor: DefaultTheme().primaryColor,
+                      enableActiveFill: true,
+                      controller: controller.edtOTP,
+                      onCompleted: (pin) async {
+                        controller.otpValue.value = int.parse(pin);
+                        if (pin.length == 6) {
+                          await controller
+                              .startOtpConfirmation(userId, password)
+                              .catchError((error) {
+                            snack(error?.message, isError: true);
+                            Future.delayed(const Duration(seconds: 2), () {
+                              Get.offAllNamed("registration");
+                            });
+                          });
+                        } else {
+                          snack("Doğrulama Kodu 6 haneli olmalıdır.",
+                              isError: true);
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    controller.start.value > 0
+                        ? "Süre: ${controller.start.value} saniye"
+                        : "Süre doldu. Lütfen yeniden deneyin.",
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: controller.start.value > 0
+                          ? DefaultTheme().redColor
+                          : Colors.redAccent,
+                    ),
+                  ),
+                  if (controller.start.value == 0)
+                    TextButton(
+                      onPressed: () {
+                        Get.offAllNamed("registration");
+                      },
+                      child: const Text(
+                        "Kayıt sayfasına geri dön",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ),
-                    verticalGap(20),
-                    Flexible(
-                      child: Form(
-                          autovalidateMode: AutovalidateMode.disabled,
-                          key: controller.formOTPKey,
-                          child: Column(
-                            children: [
-                              PinCodeTextField(
-                                appContext: context,
-                                pastedTextStyle: const TextStyle(
-                                  color: Colors.amber,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                length: 6,
-                                obscureText: false,
-                                blinkWhenObscuring: true,
-                                autoFocus: true,
-                                animationType: AnimationType.fade,
-                                pinTheme: PinTheme(
-                                  shape: PinCodeFieldShape.box,
-                                  borderRadius: BorderRadius.circular(5),
-                                  fieldHeight: 42,
-                                  fieldWidth: 42,
-                                  activeFillColor: Colors.white,
-                                  inactiveFillColor: Colors.white,
-                                  selectedFillColor: Colors.white,
-                                  activeColor: Colors.white,
-                                  inactiveColor: Colors.white,
-                                  selectedColor: Theme
-                                      .of(context)
-                                      .primaryColor,
-                                ),
-                                cursorColor: Colors.grey.shade600,
-                                animationDuration: Duration(milliseconds: 300),
-                                enableActiveFill: true,
-                                // errorAnimationController: errorController,
-                                controller: controller.edtOTP,
-                                keyboardType: TextInputType.number,
-                                onCompleted: (pin) {
-                                  controller.otpValue.value =
-                                      int.parse(pin);
-                                  String lenth = controller
-                                      .otpValue.value
-                                      .toString();
-                                  if (lenth.length.isEqual(6)) {
-                                      controller.startOtpConfirmation(userId,password);
-                                  } else {
-                                    Get.snackbar("","OTP should be Atleast 6 Digit").show();
-                                  }
-                                },
-                                beforeTextPaste: (text) {
-                                  print("Allowing to paste $text");
-                                  //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                                  //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                                  return true;
-                                },
-                              ),
-                              Column(children: [
-                                verticalGap(10),
-                                Text(
-                                  "${controller.start.value}s",
-                                  style: TextStyle(
-                                      fontSize: 14, color: DefaultTheme().redColor),
-                                  textAlign: TextAlign.center,
-                                ),
-                                verticalGap(10),
-                                Text(
-                                  "We have sent a 6-digit OTP on your registered e-mail.",
-                                  style: TextStyle(
-                                      fontSize: 13, color: Colors.grey[400]),
-                                    textAlign: TextAlign.center
-                                ),
-                                Column(
-                                  children: [
-                                    verticalGap(15),
-                                    controller.isLoading.value
-                                        ? SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          backgroundColor: DefaultTheme()
-                                              .primaryColor,
-                                          color: Colors.white,
-                                          strokeWidth: 2,
-                                        ))
-                                        : Container(),
-                                    verticalGap(15),
-                                  ],
-                                ),
-                                // controller.isShowResend.value
-                                //     ? InkWell(
-                                //   onTap: () {
-                                //     // controller.resendOTP();
-                                //   },
-                                //   child: Container(
-                                //     margin: const EdgeInsets.only(bottom: 10),
-                                //     child: Text(
-                                //       AppStrings.resendOtp,
-                                //       style: const TextStyle(
-                                //           fontSize: 13,
-                                //           color: Colors.green,
-                                //           decoration: TextDecoration.underline),
-                                //     ),
-                                //   ),
-                                // )
-                                //     : Container(),
-                              ],),
-                            ],
-                          )),
+                  const SizedBox(height: 20),
+                  if (controller.isLoading.value)
+                    const CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.blue,
                     ),
-                    verticalGap(20)
-                  ],
-                ),
+                ],
               ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:solyticket/constants/themes.dart';
@@ -66,98 +67,109 @@ class RegistrationPage extends GetView<RegistrationController> {
   }
 
   signUpInputs(BuildContext context) {
-  return Form(
-    key: controller.signUpFormKey,
-    child: Column(
-      children: [
-        CustomTextFormField(
-          labelText: "Ad Soyad",
-          hintText: "Ad Soyad",
-          prefixIcon: Icons.person,
-          controller: controller.nameController,
-          isLabel: true,
-          validator: (value) => value!.isEmpty ? "Ad Soyad zorunludur." : null,
-        ),
-        const SizedBox(height: 20),
-        CustomTextFormField(
-          labelText: "E-posta",
-          hintText: "E-posta",
-          prefixIcon: Icons.email,
-          controller: controller.emailController,
-          isLabel: true,
-          validator: emailValidator,
-        ),
-        const SizedBox(height: 20),
-        CustomTextFormField(
-          labelText: "Telefon",
-          hintText: "(5XX) XXX XX XX",
-          prefixIcon: Icons.phone,
-          controller: controller.phoneController,
-          inputType: TextInputType.phone,
-          isLabel: true,
-          validator: (value) {
-            final phone = value?.replaceAll(RegExp(r'\D'), '') ?? '';
-            if (phone.length != 10) {
-              return "Telefon numarası geçerli değil.";
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 20),
-        CustomTextFormField(
-          labelText: "Doğum Tarihi",
-          hintText: "Doğum Tarihi",
-          prefixIcon: Icons.calendar_today,
-          controller: controller.dobController,
-          isLabel: true,
-          readOnly: true,
-          onTap: () => selectDate(context),
-          validator: (value) =>
-              value!.isEmpty ? "Doğum Tarihi zorunludur." : null,
-        ),
-        const SizedBox(height: 20),
-        CustomTextFormField(
-  maxLine: 1, // Set this to 1
-  labelText: AppStrings.password,
-  prefixIcon: Icons.lock,
-  isVisible: true, // This enables obscureText internally
-  controller: controller.passwordController,
-  hintText: AppStrings.password,
-  validator: passwordValidator,
-  suffixIcon: Icons.visibility,
-  suffixIcon2: Icons.visibility_off,
-  isLabel: true,
-),
-const SizedBox(height: 20),
-CustomTextFormField(
-  maxLine: 1, // Set this to 1
-  labelText: AppStrings.confirmPassword, // Make sure you have this string
-  prefixIcon: Icons.lock,
-  isVisible: true, // Ensures obscureText is true
-  controller: controller.confirmPasswordController,
-  hintText: AppStrings.confirmPassword,
-  validator: (value) {
-    if (value != controller.passwordController.text) {
-      return "Şifreler eşleşmiyor";
-    }
-    return null;
-  },
-  suffixIcon: Icons.visibility,
-  suffixIcon2: Icons.visibility_off,
-  isLabel: true,
-),
+    return Form(
+      key: controller.signUpFormKey,
+      child: Column(
+        children: [
+          // Ad Soyad
+          CustomTextFormField(
+            labelText: "Ad Soyad",
+            hintText: "Ad Soyad",
+            prefixIcon: Icons.person,
+            controller: controller.nameController,
+            isLabel: true,
+            validator: (value) =>
+                value!.isEmpty ? "Ad Soyad zorunludur." : null,
+          ),
+          const SizedBox(height: 20),
 
-      ],
-    ),
-  );
-}
+          // E-posta
+          CustomTextFormField(
+            labelText: "E-posta",
+            hintText: "E-posta",
+            prefixIcon: Icons.email,
+            controller: controller.emailController,
+            isLabel: true,
+            validator: emailValidator,
+          ),
+          const SizedBox(height: 20),
 
+          // Telefon
+          CustomTextFormField(
+            labelText: "Telefon",
+            hintText: "(5XX) XXX XX XX",
+            prefixIcon: Icons.phone,
+            controller: controller.phoneController,
+            inputType: TextInputType.phone,
+            isLabel: true,
+            inputFormatters: [PhoneInputFormatter()],
+            validator: (value) {
+              final phone = value?.replaceAll(RegExp(r'\D'), '') ?? '';
+              if (phone.length != 10) {
+                return "Telefon numarası geçerli değil.";
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+
+          // Doğum Tarihi
+          CustomTextFormField(
+            labelText: "Doğum Tarihi",
+            hintText: "Doğum Tarihi",
+            prefixIcon: Icons.calendar_today,
+            controller: controller.dobController,
+            isLabel: true,
+            readOnly: true,
+            onTap: () => selectDate(context),
+            validator: (value) =>
+                value!.isEmpty ? "Doğum Tarihi zorunludur." : null,
+          ),
+          const SizedBox(height: 20),
+
+          // Şifre
+          CustomTextFormField(
+            maxLine: 1,
+            labelText: "Şifre",
+            prefixIcon: Icons.lock,
+            isVisible: true,
+            controller: controller.passwordController,
+            hintText: "Şifre",
+            validator: validatePassword,
+            suffixIcon: Icons.visibility,
+            suffixIcon2: Icons.visibility_off,
+            isLabel: true,
+          ),
+          const SizedBox(height: 20),
+
+          // Şifre Onayı
+          CustomTextFormField(
+            maxLine: 1,
+            labelText: "Şifre Onayı",
+            prefixIcon: Icons.lock,
+            isVisible: true,
+            controller: controller.confirmPasswordController,
+            hintText: "Şifre Onayı",
+            validator: (value) {
+              if (value != controller.passwordController.text) {
+                return "Şifreler eşleşmiyor";
+              }
+              return null;
+            },
+            suffixIcon: Icons.visibility,
+            suffixIcon2: Icons.visibility_off,
+            isLabel: true,
+          ),
+        ],
+      ),
+    );
+  }
 
   signUpButton() {
     return Obx(() => CustomLoaderButton(
-          btnText: AppStrings.signUp,
-          onTap: ()async {
-            if (controller.signUpFormKey.currentState!.validate() ) {
+          btnText: "Kaydol",
+          onTap: () async {
+            if (controller.signUpFormKey.currentState!.validate()) {
               controller.register();
             } else {
               snack("Lütfen tüm alanları doldurun ve sözleşmeyi kabul edin.",
@@ -167,8 +179,6 @@ CustomTextFormField(
           isLoading: controller.isLoading.value,
         ));
   }
-
-
 
   signUpFooter() {
     return RichTextWidget(
@@ -191,21 +201,43 @@ CustomTextFormField(
           DateFormat('yyyy-MM-dd').format(newSelectedDate);
     }
   }
+}
 
-  String formatPhoneNumber(String value) {
-    final digits = value.replaceAll(RegExp(r'\D'), '');
-    if (digits.length >= 10) {
-      return "(${digits.substring(0, 3)}) ${digits.substring(3, 6)} ${digits.substring(6, 8)} ${digits.substring(8, 10)}";
-    }
-    return digits;
-  }
+class PhoneInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String digits = newValue.text.replaceAll(RegExp(r'\D'), ''); // Only digits
+    String formatted = '';
 
-  String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) return "Şifre zorunludur.";
-    if (value.length < 8) return "Şifre en az 8 karakter olmalıdır.";
-    if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$').hasMatch(value)) {
-      return "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve özel karakter içermelidir.";
+    if (digits.length >= 1) {
+      formatted += '(${digits.substring(0, 3)}'; // First 3 digits (area code)
     }
-    return null;
+    if (digits.length >= 4) {
+      formatted += ') ${digits.substring(3, 6)}'; // Next 3 digits
+    }
+    if (digits.length >= 7) {
+      formatted += ' ${digits.substring(6, 8)}'; // Next 2 digits
+    }
+    if (digits.length >= 9) {
+      formatted += ' ${digits.substring(8, 10)}'; // Final 2 digits
+    }
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
   }
+}
+
+String? validatePassword(String? value) {
+  if (value == null || value.isEmpty) return "Şifre zorunludur.";
+  if (value.length < 8) return "Şifre en az 8 karakter olmalıdır.";
+  if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$')
+      .hasMatch(value)) {
+    return "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve özel karakter içermelidir.";
+  }
+  return null;
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:solyticket/modules/authentication_module/registration/repo/registration_repository.dart';
@@ -7,14 +6,14 @@ import 'package:solyticket/utills/strings.dart';
 
 class RegistrationController extends GetxController {
   RegistrationRepository repo;
-  
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController(); // Add this line
   final dobController = TextEditingController();
-  
+
   final signUpFormKey = GlobalKey<FormState>();
   DateTime? selectedDate;
   var isLoading = false.obs;
@@ -35,9 +34,11 @@ class RegistrationController extends GetxController {
       await repo.userRegistration(data).then((response) {
         if (response!.statusCode == 200 || response.statusCode == 201) {
           var registerResult = response.data;
+
           if (registerResult["success"] == true) {
             isLoading.value = false;
             var userId = registerResult["data"]["userId"];
+
             Get.toNamed("otp", arguments: [userId, passwordController.text]);
           } else {
             isLoading.value = false;

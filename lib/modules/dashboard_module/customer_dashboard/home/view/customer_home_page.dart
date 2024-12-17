@@ -32,13 +32,15 @@ class CustomerHomePage extends StatelessWidget {
     return Obx(
       () => DefaultAppLayout(
         isAppBar: true,
-        title: AppBarLogo().setLogo(),
+        title: Center(
+          child: AppBarLogo().setLogo(),
+        ),
         action: [
           GlobalClass.isLogin
               ? InkWell(
                   onTap: () async {
-                   await GlobalClass().resetUserInfo();
-                   Get.toNamed("login");
+                    await GlobalClass().resetUserInfo();
+                    Get.toNamed("login");
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(right: 15.0),
@@ -67,8 +69,8 @@ class CustomerHomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                verticalGap(20),
-                becomeMember(),
+                // verticalGap(20),
+                // becomeMember(),
                 verticalGap(25),
                 headerBanner(),
                 upcomingEvents(),
@@ -145,10 +147,12 @@ class CustomerHomePage extends StatelessWidget {
                   children: List.generate(
                       controller.recentEventList.value.data.length,
                       (index) => InkWell(
-                        onTap: (){
-                          Get.toNamed("event-detail",arguments: controller.recentEventList.value.data[index].id);
-                        },
-                        child: Card(
+                            onTap: () {
+                              Get.toNamed("event-detail",
+                                  arguments: controller
+                                      .recentEventList.value.data[index].id);
+                            },
+                            child: Card(
                               child: Stack(
                                 children: [
                                   Container(
@@ -193,9 +197,10 @@ class CustomerHomePage extends StatelessWidget {
                                               horizontalGap(10),
                                               Text(
                                                 'Summer Beats',
-                                                style: textDesigner(
-                                                    15, DefaultTheme().whiteColor,
-                                                    fontWeight: FontWeight.bold),
+                                                style: textDesigner(15,
+                                                    DefaultTheme().whiteColor,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ],
                                           )
@@ -204,7 +209,7 @@ class CustomerHomePage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                      )),
+                          )),
                 ),
               ),
             ],
@@ -398,7 +403,9 @@ class CustomerHomePage extends StatelessWidget {
                       controller.recentEventList.value.data.length, (index) {
                     return InkWell(
                       onTap: () {
-                        Get.toNamed("event-detail",arguments: controller.recentEventList.value.data[index].id);
+                        Get.toNamed("event-detail",
+                            arguments: controller
+                                .recentEventList.value.data[index].id);
                       },
                       child: Card(
                         elevation: 5,
