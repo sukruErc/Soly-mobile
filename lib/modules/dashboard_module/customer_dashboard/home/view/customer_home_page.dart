@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:solyticket/constants/app_constant.dart';
 import 'package:solyticket/constants/themes.dart';
-import 'package:solyticket/modules/authentication_module/login/view/login_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/view/event_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/controller/customer_home_controller.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/repo/customer_home_repo.dart';
@@ -304,36 +303,41 @@ class CustomerHomePage extends StatelessWidget {
   }
 
   entertainments() {
-    Map<String, IconData> categoryIcons = {
-      "Spor": Icons.sports_soccer,
-      "Kültür Ve Sanat": Icons.palette,
-      "Sahne": Icons.theater_comedy,
-      "Müzik": Icons.music_note,
-      "Eğitim": Icons.school,
-    };
+  Map<String, IconData> categoryIcons = {
+    "Spor": Icons.sports_soccer,
+    "Kültür Ve Sanat": Icons.palette,
+    "Sahne": Icons.theater_comedy,
+    "Müzik": Icons.music_note,
+    "Eğitim": Icons.school,
+  };
 
-    return controller.catCountList.value.data.isNotEmpty
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              verticalGap(40),
-              TitleSubtitleText(
-                title: AppStrings.discoverFun,
-                subtitle: AppStrings.entertainmentGuide,
-              ),
-              verticalGap(20),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Row(
-                  children: List.generate(
-                    controller.catCountList.value.data.length,
-                    (index) {
-                      var category = controller.catCountList.value.data[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0,
-                            vertical: 5.0), // Added padding fix
+  return controller.catCountList.value.data.isNotEmpty
+      ? Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            verticalGap(40),
+            TitleSubtitleText(
+              title: AppStrings.discoverFun,
+              subtitle: AppStrings.entertainmentGuide,
+            ),
+            verticalGap(20),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Row(
+                children: List.generate(
+                  controller.catCountList.value.data.length,
+                  (index) {
+                    var category = controller.catCountList.value.data[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(
+                          () => EventPage(isFromTab: false),
+                          arguments: {"initialCategoryId": category.id},
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
                         child: SizedBox(
                           height: Media.height() * 0.18,
                           width: Media.width() * 0.4,
@@ -358,7 +362,6 @@ class CustomerHomePage extends StatelessWidget {
                             ),
                             child: Stack(
                               children: [
-                                // Large Background Icon
                                 Positioned(
                                   top: 10,
                                   right: 10,
@@ -373,10 +376,8 @@ class CustomerHomePage extends StatelessWidget {
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      // Rounded Icon Container
                                       Container(
                                         height: 50,
                                         width: 50,
@@ -403,7 +404,6 @@ class CustomerHomePage extends StatelessWidget {
                                         ),
                                       ),
                                       verticalGap(10),
-                                      // Category Name
                                       Text(
                                         category.categoryName,
                                         style: textDesigner(
@@ -414,7 +414,6 @@ class CustomerHomePage extends StatelessWidget {
                                         textAlign: TextAlign.center,
                                       ),
                                       verticalGap(5),
-                                      // Event Count
                                       Text(
                                         "${category.count} Etkinlik",
                                         style: textDesigner(
@@ -430,15 +429,17 @@ class CustomerHomePage extends StatelessWidget {
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ],
-          )
-        : catCountShimmer();
-  }
+            ),
+          ],
+        )
+      : catCountShimmer();
+}
+
 
   catCountShimmer() {
     return Column(
@@ -1113,20 +1114,27 @@ class CustomerHomePage extends StatelessWidget {
     );
   }
 
-  headerBanner() {
-    return controller.highlightedEventList.value.data.isNotEmpty
-        ? CarouselSlider(
-            options: CarouselOptions(
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 5), // Slower transition
-              autoPlayAnimationDuration: const Duration(milliseconds: 800),
-              viewportFraction: 0.9,
-              enlargeCenterPage: true,
-              height: Media.height() * 0.35,
-            ),
-            items: controller.highlightedEventList.value.data.map((item) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+headerBanner() {
+  return controller.highlightedEventList.value.data.isNotEmpty
+      ? CarouselSlider(
+          options: CarouselOptions(
+            autoPlay: true,
+            autoPlayInterval: const Duration(seconds: 5),
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            viewportFraction: 0.9,
+            enlargeCenterPage: true,
+            height: Media.height() * 0.35,
+          ),
+          items: controller.highlightedEventList.value.data.map((item) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: InkWell(
+                onTap: () {
+                  Get.toNamed(
+                    "event-detail",
+                    arguments: item.id,
+                  );
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
@@ -1212,7 +1220,7 @@ class CustomerHomePage extends StatelessWidget {
                                   const SizedBox(width: 5),
                                   Expanded(
                                     child: Text(
-                                      item.location.name ?? "Konum Bilinmiyor",
+                                      item.location.name,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: textDesigner(
@@ -1230,11 +1238,12 @@ class CustomerHomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-              );
-            }).toList(),
-          )
-        : bannerShimmer();
-  }
+              ),
+            );
+          }).toList(),
+        )
+      : bannerShimmer();
+}
 
   bannerShimmer() {
     return CarouselSlider(

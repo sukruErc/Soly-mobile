@@ -4,7 +4,6 @@ import 'package:solyticket/model/category_count_json.dart';
 import 'package:solyticket/model/event_detail_model.dart';
 import 'package:solyticket/model/highlight_event_json.dart';
 import 'package:solyticket/model/location_json.dart';
-import 'package:solyticket/model/recent_event_json.dart';
 import 'package:solyticket/model/upcoming_event_json.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/repo/customer_home_repo.dart';
 

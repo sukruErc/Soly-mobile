@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -8,7 +7,6 @@ import 'package:solyticket/modules/authentication_module/registration/controller
 import 'package:solyticket/utills/images.dart';
 import 'package:solyticket/utills/media.dart';
 import 'package:solyticket/utills/snippets.dart';
-import 'package:solyticket/utills/strings.dart';
 import 'package:solyticket/widgets/custom_loader_button.dart';
 import 'package:solyticket/widgets/custom_text_form_field.dart';
 import 'package:solyticket/widgets/rich_text.dart';

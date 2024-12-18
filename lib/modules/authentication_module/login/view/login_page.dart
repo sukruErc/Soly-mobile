@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:solyticket/constants/themes.dart';
 import 'package:solyticket/modules/authentication_module/login/controller/login_controller.dart';
 import 'package:solyticket/utills/images.dart';
 import 'package:solyticket/utills/media.dart';
 import 'package:solyticket/utills/snippets.dart';
-import 'package:solyticket/utills/strings.dart';
-import 'package:solyticket/utills/widget_formats.dart';
 import 'package:solyticket/widgets/app_layout.dart';
 import 'package:solyticket/widgets/custom_loader_button.dart';
 import 'package:solyticket/widgets/custom_text_form_field.dart';
