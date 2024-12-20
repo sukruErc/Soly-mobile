@@ -20,4 +20,6 @@ static const String redeemCoupon = 'collection/redeem-coupon';
 static const String getUserInfo = 'users';
 static const String updateUserInfo = 'users';
 static const String getUserTickets = 'users/get-tickets-of-user';
+static const String getSeatCategories = 'ticket/get-event-category-block-entity-by-mobile';
+static const String getSeats = 'ticket/get-event-seats-by-mobile';
 }

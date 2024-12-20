@@ -5,6 +5,10 @@ import 'package:solyticket/modules/authentication_module/otp/bindings/otp_bindin
 import 'package:solyticket/modules/authentication_module/otp/view/otp_page.dart';
 import 'package:solyticket/modules/authentication_module/registration/bindings/registration_binding.dart';
 import 'package:solyticket/modules/authentication_module/registration/view/regsitration_page.dart';
+import 'package:solyticket/modules/booking_module/bindings/seat_category_binding.dart';
+import 'package:solyticket/modules/booking_module/bindings/seat_selection_binding.dart';
+import 'package:solyticket/modules/booking_module/view/seat_category_page.dart';
+import 'package:solyticket/modules/booking_module/view/seat_selection_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/dashboard/bindings/customer_dashboard_binding.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/dashboard/view/customer_dashboard_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/bindings/event_binding.dart';
@@ -39,6 +43,8 @@ class Routes {
   static String profile = '/profile';
   static String organizerHome = '/organizer-home';
   static String myActivity = '/my-activity';
+  static String seatCategorySelc = '/seat-category-selection';
+  static String seatSelection = '/seat-selection';
 }
 
 final getPages = [
@@ -70,7 +76,7 @@ final getPages = [
       page: () => EventDetailPage(),
       binding: EventBinding()),
   GetPage(
-    name: "/collection",
+    name: Routes.collection,
     page: () => CollectionPage(),
     binding: CollectionBindings(),
   ),
@@ -95,4 +101,13 @@ final getPages = [
       name: Routes.organizerDashboard,
       page: () => const OrganizerDashboardPage(),
       binding: OrganizerDashboardBinding()),
+  GetPage(
+      name: Routes.seatCategorySelc,
+      page: () => const SeatCategoryPage(),
+      binding: SeatCategoryBinding()),
+  GetPage(
+    name: Routes.seatSelection,
+    page: () => SeatSelectionPage(),
+    binding: SeatSelectionBinding()
+  ),
 ];

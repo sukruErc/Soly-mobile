@@ -1,29 +1,45 @@
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:solyticket/modules/booking_module/controller/seat_selection_controller.dart';
+import 'package:solyticket/widgets/app_layout.dart';
 
-class SeatSelectionPage extends StatelessWidget {
+class SeatSelectionPage extends GetView<SeatSelectionController> {
   SeatSelectionPage({super.key});
 
   final Set<SeatNumber> selectedSeats = Set();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: Column(
+    return DefaultAppLayout(
+      isAppBar: true,
+      title: const Text("Seats"),
+      backgroundColor: Colors.white,
+      centerTitle: true,
+      child: Obx(()=>controller.isLoading.value
+          ? const Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: EdgeInsets.only(top: 12.0),
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ):Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(
             height: 16,
           ),
-          const Text("Hello"),
           const SizedBox(
             height: 16,
           ),
           Flexible(
             child: SizedBox(
-              width: double.maxFinite,
+              width: Get.width,
               height: 500,
               child: SeatLayoutWidget(
                 onSeatStateChanged: (rowI, colI, seatState) {
@@ -41,106 +57,15 @@ class SeatSelectionPage extends StatelessWidget {
                     selectedSeats.remove(SeatNumber(rowI: rowI, colI: colI));
                   }
                 },
-                stateModel: const SeatLayoutStateModel(
+                stateModel: SeatLayoutStateModel(
                   pathDisabledSeat: 'assets/images/seat_disabled.svg',
                   pathSelectedSeat: 'assets/images/seat_selected.svg',
                   pathSoldSeat: 'assets/images/seat_sold.svg',
                   pathUnSelectedSeat: 'assets/images/seat_unselected.svg',
-                  rows: 10,
-                  cols: 7,
+                  rows: controller.seatList.value.data![0].numOfRows,
+                  cols: controller.seatList.value.data![0].numOfColumns,
                   seatSvgSize: 45,
-                  currentSeatsState: [
-                    [
-                      SeatState.disabled,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.empty,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.sold,
-                    ],
-                    [
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.empty,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                    ],
-                    [
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.empty,
-                      SeatState.sold,
-                      SeatState.sold,
-                      SeatState.sold,
-                    ],
-                    [
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.empty,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                    ],
-                    [
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.empty,
-                      SeatState.unselected,
-                      SeatState.sold,
-                      SeatState.sold,
-                    ],
-                    [
-                      SeatState.sold,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.empty,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                    ],
-                    [
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.empty,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                    ],
-                    [
-                      SeatState.sold,
-                      SeatState.sold,
-                      SeatState.unselected,
-                      SeatState.empty,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                    ],
-                    [
-                      SeatState.empty,
-                      SeatState.empty,
-                      SeatState.empty,
-                      SeatState.empty,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.sold,
-                    ],
-                    [
-                      SeatState.unselected,
-                      SeatState.unselected,
-                      SeatState.sold,
-                      SeatState.sold,
-                      SeatState.sold,
-                      SeatState.unselected,
-                      SeatState.unselected,
-                    ],
-                  ],
+                  currentSeatsState: controller.finalList.value
                 ),
               ),
             ),
@@ -207,14 +132,14 @@ class SeatSelectionPage extends StatelessWidget {
             child: const Text('Show my selected seat numbers'),
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith(
-                  (states) => const Color(0xFFfc4c4e)),
+                      (states) => const Color(0xFFfc4c4e)),
             ),
           ),
           const SizedBox(height: 12),
           Text(selectedSeats.join(" , "))
         ],
-      ),
-    ));
+      )),
+    );
   }
 }
 

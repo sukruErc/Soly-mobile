@@ -6,6 +6,7 @@ class AppStrings {
   static String signUp = "Sign Up";
   static String logout = "Logout";
   static String someThingWrong = "Something went wrong!";
+  static String done = "Done";
 
   //Login Strings
   static String forgotPassword = "Forgot Password";
@@ -41,5 +42,6 @@ class AppStrings {
   static String eventTitle = "Events";
   //Event Detail
   static String eventDetailTitle = "Event Detail";
-
+  //Booking
+  static String selectBookingCg = "Please select category!";
 }

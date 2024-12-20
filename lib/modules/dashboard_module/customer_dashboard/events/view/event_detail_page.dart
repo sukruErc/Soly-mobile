@@ -113,16 +113,19 @@ class EventDetailPage extends StatelessWidget {
                    ],
                  ),
                ),
-               Container(
-                 padding:
-                 const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                 decoration: BoxDecoration(
-                   color: DefaultTheme().primaryColor,
-                   borderRadius: BorderRadius.circular(5),
-                 ),
-                 child: Text(
-                   'Buy now',
-                   style: textDesigner(12,DefaultTheme().whiteColor),
+               GestureDetector(
+                 onTap: ()=>Get.toNamed("seat-category-selection",arguments: [eventDetailController.eventDetail.value.data!.id]),
+                 child: Container(
+                   padding:
+                   const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                   decoration: BoxDecoration(
+                     color: DefaultTheme().primaryColor,
+                     borderRadius: BorderRadius.circular(5),
+                   ),
+                   child: Text(
+                     'Buy now',
+                     style: textDesigner(12,DefaultTheme().whiteColor),
+                   ),
                  ),
                )
              ],
