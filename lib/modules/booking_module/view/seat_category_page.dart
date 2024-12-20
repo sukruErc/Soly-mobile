@@ -17,6 +17,7 @@ class SeatCategoryPage extends GetView<SeatCategoryController> {
     return DefaultAppLayout(
       title: const Text("Seat Category"),
       isAppBar: true,
+      leading: backButton(),
       child: Column(
         children: [
           verticalGap(15),
@@ -114,5 +115,17 @@ class SeatCategoryPage extends GetView<SeatCategoryController> {
         ],
       ),
     );
+  }
+
+  backButton() {
+    return IconButton(
+        padding: const EdgeInsets.only(right: 3),
+        onPressed: () {
+          Get.back();
+        },
+        icon: const Icon(
+          Icons.arrow_back_ios_new,
+          size: 22,
+        ));
   }
 }

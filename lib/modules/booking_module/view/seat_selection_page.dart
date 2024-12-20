@@ -14,6 +14,7 @@ class SeatSelectionPage extends GetView<SeatSelectionController> {
   Widget build(BuildContext context) {
     return DefaultAppLayout(
       isAppBar: true,
+      leading: backButton(),
       title: const Text("Seats"),
       backgroundColor: Colors.white,
       centerTitle: true,
@@ -140,6 +141,17 @@ class SeatSelectionPage extends GetView<SeatSelectionController> {
         ],
       )),
     );
+  }
+  backButton() {
+    return IconButton(
+        padding: const EdgeInsets.only(right: 3),
+        onPressed: () {
+          Get.back();
+        },
+        icon: const Icon(
+          Icons.arrow_back_ios_new,
+          size: 22,
+        ));
   }
 }
 
