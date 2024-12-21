@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:solyticket/constants/themes.dart';
@@ -6,8 +7,6 @@ import 'package:solyticket/modules/authentication_module/registration/controller
 import 'package:solyticket/utills/images.dart';
 import 'package:solyticket/utills/media.dart';
 import 'package:solyticket/utills/snippets.dart';
-import 'package:solyticket/utills/strings.dart';
-import 'package:solyticket/utills/widget_formats.dart';
 import 'package:solyticket/widgets/custom_loader_button.dart';
 import 'package:solyticket/widgets/custom_text_form_field.dart';
 import 'package:solyticket/widgets/rich_text.dart';
@@ -18,21 +17,35 @@ class RegistrationPage extends GetView<RegistrationController> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-            backgroundColor: DefaultTheme().backgroundColor,
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(15),
-              child: Column(children: [
-                headerImageAndTitle(context),
-                verticalGap(40),
-                signUpInputs(context),
-                verticalGap(50),
-                signUpButton(),
-                verticalGap(40),
-                signUpFooter()
-              ]),
-            )));
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Get.offAllNamed('/customer-dashboard'); // Back to dashboard
+            },
+          ),
+        ),
+        backgroundColor: DefaultTheme().backgroundColor,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            children: [
+              headerImageAndTitle(context),
+              const SizedBox(height: 30),
+              signUpInputs(context),
+              const SizedBox(height: 40),
+              signUpButton(),
+              const SizedBox(height: 40),
+              signUpFooter()
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   headerImageAndTitle(BuildContext context) {
@@ -43,10 +56,9 @@ class RegistrationPage extends GetView<RegistrationController> {
           width: Media.width() * 0.240,
           image: const AssetImage(AppImages.logo),
         ),
-        Text(
-          AppStrings.createAccountHeader,
-          style: textDesigner(23, DefaultTheme().blackColor,
-              fontWeight: FontWeight.bold),
+        const Text(
+          "Hesabınızı Oluşturun",
+          style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -54,78 +66,112 @@ class RegistrationPage extends GetView<RegistrationController> {
 
   signUpInputs(BuildContext context) {
     return Form(
-        key: controller.signUpFormKey,
-        child: Column(
-      children: [
-        CustomTextFormField(
-          maxLine: 1,
-          prefixIcon: Icons.person,
-          controller: controller.nameController,
-          hintText: AppStrings.txtFldName,
-          validator: nameValidator,
-          labelText:  AppStrings.txtFldName,
-          isLabel: true,
-        ),
-        verticalGap(20),
-        CustomTextFormField(
-          maxLine: 1,
-          labelText:  AppStrings.email,
-          prefixIcon: Icons.email,
-          controller: controller.emailController,
-          hintText: AppStrings.email,
-          validator: emailValidator,
-          isLabel: true,
-        ),
-        verticalGap(20),
-        CustomTextFormField(
-          maxLine: 1,
-          labelText: AppStrings.txtFldTelephone,
-          prefixIcon: Icons.phone,
-          controller: controller.phoneController,
-          hintText: AppStrings.txtFldTelephone,
-          validator: phoneValidator,
-          inputType: TextInputType.number,
-          isLabel: true,
-        ),
-        verticalGap(20),
-        CustomTextFormField(
-          maxLine: 1,
-          labelText: AppStrings.txtFldDob,
-          prefixIcon: Icons.calendar_today,
-          controller: controller.dobController,
-          hintText: AppStrings.txtFldDob,
-          validator: dobValidator,
-          readOnly: true,
-          inputType: TextInputType.number,
-          isLabel: true,
-          onTap: () async {
-            selectDate(context);
-          },
-        ),
-        verticalGap(20),
-        CustomTextFormField(
-          maxLine: 1,
-          labelText: AppStrings.password,
-          prefixIcon: Icons.lock,
-          isVisible: true,
-          controller: controller.passwordController,
-          hintText: AppStrings.password,
-          validator: passwordValidator,
-          suffixIcon: Icons.visibility,
-          suffixIcon2: Icons.visibility_off,
-          isLabel: true,
-        ),
-      ],
-    ));
+      key: controller.signUpFormKey,
+      child: Column(
+        children: [
+          // Ad Soyad
+          CustomTextFormField(
+            labelText: "Ad Soyad",
+            hintText: "Ad Soyad",
+            prefixIcon: Icons.person,
+            controller: controller.nameController,
+            isLabel: true,
+            validator: (value) =>
+                value!.isEmpty ? "Ad Soyad zorunludur." : null,
+          ),
+          const SizedBox(height: 20),
+
+          // E-posta
+          CustomTextFormField(
+            labelText: "E-posta",
+            hintText: "E-posta",
+            prefixIcon: Icons.email,
+            controller: controller.emailController,
+            isLabel: true,
+            validator: emailValidator,
+          ),
+          const SizedBox(height: 20),
+
+          // Telefon
+          CustomTextFormField(
+            labelText: "Telefon",
+            hintText: "(5XX) XXX XX XX",
+            prefixIcon: Icons.phone,
+            controller: controller.phoneController,
+            inputType: TextInputType.phone,
+            isLabel: true,
+            inputFormatters: [PhoneInputFormatter()],
+            validator: (value) {
+              final phone = value?.replaceAll(RegExp(r'\D'), '') ?? '';
+              if (phone.length != 10) {
+                return "Telefon numarası geçerli değil.";
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+
+          // Doğum Tarihi
+          CustomTextFormField(
+            labelText: "Doğum Tarihi",
+            hintText: "Doğum Tarihi",
+            prefixIcon: Icons.calendar_today,
+            controller: controller.dobController,
+            isLabel: true,
+            readOnly: true,
+            onTap: () => selectDate(context),
+            validator: (value) =>
+                value!.isEmpty ? "Doğum Tarihi zorunludur." : null,
+          ),
+          const SizedBox(height: 20),
+
+          // Şifre
+          CustomTextFormField(
+            maxLine: 1,
+            labelText: "Şifre",
+            prefixIcon: Icons.lock,
+            isVisible: true,
+            controller: controller.passwordController,
+            hintText: "Şifre",
+            validator: validatePassword,
+            suffixIcon: Icons.visibility,
+            suffixIcon2: Icons.visibility_off,
+            isLabel: true,
+          ),
+          const SizedBox(height: 20),
+
+          // Şifre Onayı
+          CustomTextFormField(
+            maxLine: 1,
+            labelText: "Şifre Onayı",
+            prefixIcon: Icons.lock,
+            isVisible: true,
+            controller: controller.confirmPasswordController,
+            hintText: "Şifre Onayı",
+            validator: (value) {
+              if (value != controller.passwordController.text) {
+                return "Şifreler eşleşmiyor";
+              }
+              return null;
+            },
+            suffixIcon: Icons.visibility,
+            suffixIcon2: Icons.visibility_off,
+            isLabel: true,
+          ),
+        ],
+      ),
+    );
   }
 
   signUpButton() {
     return Obx(() => CustomLoaderButton(
-          btnText: AppStrings.signUp,
+          btnText: "Kaydol",
           onTap: () async {
-            if(controller.signUpFormKey.currentState!
-                .validate()){
+            if (controller.signUpFormKey.currentState!.validate()) {
               controller.register();
+            } else {
+              snack("Lütfen tüm alanları doldurun ve sözleşmeyi kabul edin.",
+                  isError: true);
             }
           },
           isLoading: controller.isLoading.value,
@@ -134,41 +180,62 @@ class RegistrationPage extends GetView<RegistrationController> {
 
   signUpFooter() {
     return RichTextWidget(
-        messageText: AppStrings.haveAccount,
-        titleText: AppStrings.signLoginTitle,
-        onTap: () {
-          Get.offAndToNamed("login");
-        });
+      messageText: "Zaten hesabınız var mı?",
+      titleText: "Giriş Yap",
+      onTap: () => Get.offAndToNamed("login"),
+    );
   }
 
   selectDate(BuildContext context) async {
     DateTime? newSelectedDate = await showDatePicker(
-        context: context,
-        initialDate: controller.selectedDate ?? DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2040),
-        builder: (BuildContext context, Widget? child) {
-          return Theme(
-            data: ThemeData.dark().copyWith(
-              colorScheme: const ColorScheme.dark(
-                primary: Colors.blue,
-                onPrimary: Colors.white,
-                surface: Colors.white,
-                onSurface: Colors.black,
-              ),
-              dialogBackgroundColor: Colors.white,
-            ),
-            child: child!,
-          );
-        });
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
 
     if (newSelectedDate != null) {
-      controller.selectedDate = newSelectedDate;
-      controller.dobController
-        ..text = DateFormat.yMMMd().format(controller.selectedDate!)
-        ..selection = TextSelection.fromPosition(TextPosition(
-            offset: controller.dobController.text.length,
-            affinity: TextAffinity.upstream));
+      controller.dobController.text =
+          DateFormat('yyyy-MM-dd').format(newSelectedDate);
     }
   }
+}
+
+class PhoneInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String digits = newValue.text.replaceAll(RegExp(r'\D'), ''); // Only digits
+    String formatted = '';
+
+    if (digits.length >= 1) {
+      formatted += '(${digits.substring(0, 3)}'; // First 3 digits (area code)
+    }
+    if (digits.length >= 4) {
+      formatted += ') ${digits.substring(3, 6)}'; // Next 3 digits
+    }
+    if (digits.length >= 7) {
+      formatted += ' ${digits.substring(6, 8)}'; // Next 2 digits
+    }
+    if (digits.length >= 9) {
+      formatted += ' ${digits.substring(8, 10)}'; // Final 2 digits
+    }
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
+String? validatePassword(String? value) {
+  if (value == null || value.isEmpty) return "Şifre zorunludur.";
+  if (value.length < 8) return "Şifre en az 8 karakter olmalıdır.";
+  if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$')
+      .hasMatch(value)) {
+    return "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve özel karakter içermelidir.";
+  }
+  return null;
 }

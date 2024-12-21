@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:solyticket/constants/app_constant.dart';
 import 'package:solyticket/constants/themes.dart';
-import 'package:solyticket/model/category_type.dart';
 import 'package:solyticket/model/filters_json.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/controller/event_controller.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/repo/event_repo.dart';
@@ -29,10 +27,12 @@ class _EventPageState extends State<EventPage> {
 
   @override
   void initState() {
-    controller = Get.put(
-        EventController(EventRepo(apiClient: ApiClient()), widget.isFromTab));
-    // TODO: implement initState
     super.initState();
+    String? initialCategoryId = Get.arguments?['initialCategoryId'];
+    controller = Get.put(
+      EventController(EventRepo(apiClient: ApiClient()), widget.isFromTab,
+          initialCategoryId: initialCategoryId),
+    );
   }
 
   @override
@@ -104,7 +104,7 @@ class _EventPageState extends State<EventPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Filters",
+                  "Filtreler",
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                 ),
                 InkWell(
@@ -112,7 +112,7 @@ class _EventPageState extends State<EventPage> {
                       Get.back();
                     },
                     child: Text(
-                      "Close",
+                      "Kapat",
                       style: textDesigner(
                         14,
                         DefaultTheme().primaryColor,
@@ -136,7 +136,7 @@ class _EventPageState extends State<EventPage> {
                     child: CustomTextFormField(
                       maxLine: 1,
                       labelText: '',
-                      hintText: 'Select Date',
+                      hintText: 'Tarih Seç',
                       controller: controller.textEditingController,
                       suffixIcon: Icons.date_range,
                       fillerColor: Colors.white,
@@ -153,7 +153,7 @@ class _EventPageState extends State<EventPage> {
                         child: DropdownButtonFormField<String>(
                           value: controller.selectedSortOrder.value,
                           decoration: InputDecoration(
-                            hintText: 'Select Sort Order...',
+                            hintText: 'Sırala',
                             suffixIcon: controller.selectedSortOrder.value ==
                                     null
                                 ? null
@@ -196,7 +196,7 @@ class _EventPageState extends State<EventPage> {
                         child: DropdownButtonFormField<String>(
                           value: controller.selectedLocationId.value,
                           decoration: InputDecoration(
-                            hintText: 'Select Location ID...',
+                            hintText: 'Mekan',
                             suffixIcon:
                                 controller.selectedLocationId.value == null
                                     ? null
@@ -240,7 +240,7 @@ class _EventPageState extends State<EventPage> {
                         child: DropdownButtonFormField<String>(
                           value: controller.selectedCatId.value,
                           decoration: InputDecoration(
-                            hintText: 'Select Category...',
+                            hintText: 'Kategori',
                             suffixIcon: controller.selectedCatId.value == null
                                 ? null
                                 : IconButton(
@@ -265,18 +265,7 @@ class _EventPageState extends State<EventPage> {
                           ),
                           onChanged: (newValue) {
                             controller.selectedCatId.value = newValue;
-                            controller.catTypeList.value = [];
-                            var ct = controller
-                                .filtersJson.value.data!.categories
-                                .firstWhere((e) =>
-                                    e.id == controller.selectedCatId.value);
-                            for (var cat in ct.categoryType) {
-                              CategoryType cg = CategoryType();
-                              cg.id = cat.id;
-                              cg.name = cat.name;
-                              cg.isSelected = false;
-                              controller.catTypeList.add(cg);
-                            }
+                            controller.setSubCategoryList(newValue);
                             applyFilter();
                           },
                           items: controller.filtersJson.value.data?.categories
@@ -288,6 +277,41 @@ class _EventPageState extends State<EventPage> {
                           }).toList(),
                         ),
                       )),
+                  Obx(() {
+                    return controller.subCatTypeList.isEmpty
+                        ? Container()
+                        : Wrap(
+                            spacing: 8.0,
+                            runSpacing: 4.0,
+                            children: List.generate(
+                                controller.subCatTypeList.length, (index) {
+                              var subCategory =
+                                  controller.subCatTypeList[index];
+                              return GestureDetector(
+                                onTap: () =>
+                                    controller.setSelectedSubCategory(index),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 12.0),
+                                  decoration: BoxDecoration(
+                                    color: subCategory.isSelected
+                                        ? Colors.blue
+                                        : Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Text(
+                                    subCategory.name,
+                                    style: TextStyle(
+                                      color: subCategory.isSelected
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                          );
+                  }),
                   verticalGap(15),
                   Obx(() => controller.selectedCatId.value == null
                       ? Container()
@@ -298,12 +322,12 @@ class _EventPageState extends State<EventPage> {
           ),
           const Spacer(),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               controller.clearFilter();
             },
             child: Center(
               child: Text(
-                "Clear Filter",
+                "Filtreyi Temizle",
                 style: textDesigner(15, DefaultTheme().primaryColor,
                     fontWeight: FontWeight.bold),
               ),

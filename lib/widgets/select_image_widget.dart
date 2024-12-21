@@ -70,14 +70,14 @@ class SelectImageWidget extends StatelessWidget {
                   ).then((_) {
                     // This block executes after the dialog is dismissed
                     // Check if no image was selected and show a message
-                    if (imagePickerController.image.value == null) {
-                      Get.snackbar(
-                        'No Image Selected',
-                        'No image was selected.',
-                        snackPosition: SnackPosition.BOTTOM,
-                        margin: const EdgeInsets.all( 10)
-                      );
-                    }
+                    // if (imagePickerController.image.value == null) {
+                    //   Get.snackbar(
+                    //     'No Image Selected',
+                    //     'No image was selected.',
+                    //     snackPosition: SnackPosition.BOTTOM,
+                    //     margin: const EdgeInsets.all( 10)
+                    //   );
+                    // }
                   });
                 },
               ),

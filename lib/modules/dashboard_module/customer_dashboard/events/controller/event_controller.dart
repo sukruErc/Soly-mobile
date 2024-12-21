@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:solyticket/model/category_type.dart';
 import 'package:solyticket/model/event_filter_json.dart';
 import 'package:solyticket/model/event_search_json.dart';
 import 'package:solyticket/model/filters_json.dart';
@@ -12,30 +11,70 @@ class EventController extends GetxController {
   var eventSearchJson = EventSearchJson(data: []).obs;
   var eventFilterJson = EventFilterJson(data: []).obs;
   var filtersJson = FiltersJson(data: null).obs;
-  var catTypeList = <CategoryType>[].obs;
+  var catTypeList = <Category>[].obs;
+  var subCatTypeList = <CategoryType>[].obs;
   late EventRepo eventRepo;
   DateTime? startDate;
   DateTime? endDate;
+
   final TextEditingController textEditingController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
+
   late bool isSearchShow = false;
   late bool isFromTab = false;
-  late var isSearchLoading = false.obs;
-  var selectedCatId = Rxn();
-  var selectedCatTypeId = Rxn();
-  var selectedSortOrder = Rxn();
-  var selectedLocationId = Rxn();
-  var selectedStartDate = Rxn();
-  var selectedEndDate = Rxn();
+  var isSearchLoading = false.obs;
 
-  EventController(this.eventRepo, this.isFromTab);
+  var selectedCatId = Rxn<String>();
+  var selectedCatTypeId = Rxn<String>();
+  var selectedSortOrder = Rxn<String>();
+  var selectedLocationId = Rxn<String>();
+
+  EventController(this.eventRepo, this.isFromTab, {String? initialCategoryId}) {
+    if (initialCategoryId != null) {
+      selectedCatId.value = initialCategoryId;
+      getFilteredEvents(
+        null,
+        initialCategoryId,
+        null,
+        null,
+        null,
+        "date",
+        null,
+      );
+    }
+  }
 
   @override
-  onInit() {
-    if (!isFromTab) {
-      getAllFilterData();
-    }
+  void onInit() {
     super.onInit();
+    if (!isFromTab) {
+      if (selectedCatId.value == null) {
+        getAllFilterData();
+      } else {
+        fetchFiltersOnly();
+      }
+    }
+  }
+
+  Future<void> fetchFiltersOnly() async {
+    try {
+      isSearchLoading(true);
+      await eventRepo.getFilters().then((response) {
+        if (response!.statusCode == 200) {
+          var result = json.decode(response.data);
+
+          if (result["success"] == true) {
+            filtersJson.value = FiltersJson.fromJson(result);
+            isSearchLoading(false);
+          } else {
+            isSearchLoading(false);
+          }
+        }
+      });
+    } catch (e) {
+      isSearchLoading(false);
+      print("Error fetching filters: $e");
+    }
   }
 
   searchEvents(String searchText) async {
@@ -64,34 +103,38 @@ class EventController extends GetxController {
     try {
       isSearchLoading(true);
       Map<String, dynamic> data = {"page": "1", "size": "20"};
-      if (locId!=null) {
+      if (locId != null) {
         locationId = <String, dynamic>{"locationId": locId}.entries;
         data.addEntries(locationId);
       }
-      if (catId!=null) {
+      if (catId != null) {
         categoryId = <String, dynamic>{"categoryId": catId}.entries;
         data.addEntries(categoryId);
       }
-      if (catTypeId!=null) {
+      if (catTypeId != null) {
         categoryTypeId = <String, dynamic>{"categoryTypeId": catTypeId}.entries;
         data.addEntries(categoryTypeId);
       }
-      if (stD!=null) {
-        startDt = <String, dynamic>{"startDate": DateFormat.yMMMd().format(startDate!)}.entries;
+      if (stD != null) {
+        startDt = <String, dynamic>{
+          "startDate": DateFormat.yMMMd().format(startDate!)
+        }.entries;
         data.addEntries(startDt);
       }
-      if (enD!=null) {
-        endDt = <String, dynamic>{"endDate": DateFormat.yMMMd().format(endDate!)}.entries;
+      if (enD != null) {
+        endDt = <String, dynamic>{
+          "endDate": DateFormat.yMMMd().format(endDate!)
+        }.entries;
         data.addEntries(endDt);
       }
-      if (sortBy!=null) {
+      if (sortBy != null) {
         srtBy = <String, dynamic>{"sortBy": sortBy}.entries;
         data.addEntries(srtBy);
       }
-      if (sortOrder!=null) {
-        if(sortOrder=="1"){
+      if (sortOrder != null) {
+        if (sortOrder == "1") {
           srtOrder = <String, dynamic>{"sortOrder": "asc"}.entries;
-        }else{
+        } else {
           srtOrder = <String, dynamic>{"sortOrder": "desc"}.entries;
         }
         data.addEntries(srtOrder);
@@ -112,6 +155,55 @@ class EventController extends GetxController {
     }
   }
 
+  void setSubCategoryList(String? categoryId) {
+  subCatTypeList.clear(); 
+
+  if (categoryId != null) {
+    var selectedCategory = filtersJson.value.data?.categories.firstWhere(
+      (cat) => cat.id == categoryId,
+      orElse: () => Category(
+        id: '',
+        name: '',
+        image: null,
+        categoryType: [],
+      ),
+    );
+
+    if (selectedCategory?.categoryType != null) {
+      for (var subCat in selectedCategory!.categoryType) {
+        subCatTypeList.add(CategoryType(
+          id: subCat.id,
+          name: subCat.name,
+          isSelected: false,
+        ));
+      }
+
+    }
+  }
+
+  subCatTypeList.refresh();
+}
+
+
+  void setSelectedSubCategory(int index) {
+    for (var subCat in subCatTypeList) {
+      subCat.isSelected = false;
+    }
+    subCatTypeList[index].isSelected = true;
+
+    selectedCatTypeId.value = subCatTypeList[index].id;
+    subCatTypeList.refresh();
+
+    getFilteredEvents(
+        selectedLocationId.value,
+        selectedCatId.value,
+        selectedCatTypeId.value,
+        startDate,
+        endDate,
+        "date",
+        selectedSortOrder.value);
+  }
+
   Future getAllFilterData() async {
     try {
       isSearchLoading(true);
@@ -122,26 +214,25 @@ class EventController extends GetxController {
       ]);
 
       try {
-      var searchResult = json.decode(results[0]?.data);
-      if (searchResult["success"] == true) {
-        eventFilterJson.value = EventFilterJson.fromJson(searchResult);
-      }
+        var searchResult = json.decode(results[0]?.data);
+        if (searchResult["success"] == true) {
+          eventFilterJson.value = EventFilterJson.fromJson(searchResult);
+        }
       } catch (e) {
         // do nothing here
       }
       try {
-      var result = json.decode(results[1]?.data);
-      if (result["success"] == true) {
-        isSearchLoading(false);
-        filtersJson.value = FiltersJson.fromJson(result);
-      }
+        var result = json.decode(results[1]?.data);
+        if (result["success"] == true) {
+          isSearchLoading(false);
+          filtersJson.value = FiltersJson.fromJson(result);
+        }
       } catch (e) {
         isSearchLoading(false);
         // do nothing here
       }
     } catch (e) {
       isSearchLoading(false);
-      //print
     }
   }
 
@@ -155,28 +246,42 @@ class EventController extends GetxController {
           }
         }
       });
-    } catch (e) {
-      //print
-    }
+    } catch (e) {}
   }
 
-  setCategoryType(int index) {
-    try {
-      var a = catTypeList
-          .firstWhere((e) => e.isSelected == true);
-      a.isSelected = false;
-    } catch (e) {
-      //print
-    }
-    try {
-      selectedCatTypeId.value = catTypeList[index].id;
-      catTypeList[index].isSelected = true;
-      catTypeList.refresh();
-      getFilteredEvents(selectedLocationId.value, selectedCatId.value, selectedCatTypeId.value, startDate, endDate, "date", selectedSortOrder.value);
-    } catch (e) {
-      //print
-    }
+void setCategoryType(int index) {
+  try {
+
+    var selectedCategory = catTypeList.firstWhere((e) => e.isSelected == true);
+    selectedCategory.isSelected = false;
+  } catch (e) {
+
   }
+
+  try {
+
+    selectedCatTypeId.value = catTypeList[index].id;
+    catTypeList[index].isSelected = true;
+    catTypeList.refresh();
+
+
+    setSubCategoryList(selectedCatTypeId.value);
+
+
+    getFilteredEvents(
+      selectedLocationId.value,
+      selectedCatId.value,
+      selectedCatTypeId.value,
+      startDate,
+      endDate,
+      "date",
+      selectedSortOrder.value,
+    );
+  } catch (e) {
+    print("Error in setCategoryType: $e");
+  }
+}
+
 
   setDate(DateTimeRange newSelectedDate) {
     startDate = newSelectedDate.start;
@@ -189,7 +294,14 @@ class EventController extends GetxController {
           offset: textEditingController.text.length,
           affinity: TextAffinity.upstream));
 
-    getFilteredEvents(selectedLocationId.value, selectedCatId.value,selectedCatTypeId.value, startDate!, endDate!, "date", selectedSortOrder.value);
+    getFilteredEvents(
+        selectedLocationId.value,
+        selectedCatId.value,
+        selectedCatTypeId.value,
+        startDate!,
+        endDate!,
+        "date",
+        selectedSortOrder.value);
   }
 
   void clearFilter() {
@@ -199,6 +311,13 @@ class EventController extends GetxController {
     selectedSortOrder.value = null;
     startDate = null;
     endDate = null;
-    getFilteredEvents(selectedLocationId.value, selectedCatId.value,selectedCatTypeId.value, startDate, endDate, "date", selectedSortOrder.value);
+    getFilteredEvents(
+        selectedLocationId.value,
+        selectedCatId.value,
+        selectedCatTypeId.value,
+        startDate,
+        endDate,
+        "date",
+        selectedSortOrder.value);
   }
 }
