@@ -30,4 +30,5 @@ class AppConstants {
   static const String getUserTickets = 'users/get-tickets-of-user';
   static const String similarEvents = 'events/get-similar-events';
   static const String eventTickets = 'ticket/get-event-tickets-for-sell';
+  
 }

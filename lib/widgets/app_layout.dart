@@ -8,15 +8,16 @@ class DefaultAppLayout extends StatelessWidget {
   final bool centerTitle;
   final Widget? title;
   final Widget? leading;
+  final Color? backgroundColor;
   final List<Widget>? action;
   const DefaultAppLayout(
-      {super.key, required this.child,this.isAppBar = false,this.action,this.title,this.centerTitle=false,this.leading});
+      {super.key, required this.child,this.isAppBar = false,this.action,this.title,this.centerTitle=false,this.leading,this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: isAppBar ? DefaultAppBar(text: title,actions: action,isCenterTitle: centerTitle,leadingWidget: leading,) : null,
-      backgroundColor: DefaultTheme().backgroundColor,
+      backgroundColor: backgroundColor,
       resizeToAvoidBottomInset: true,
       body: child,
     );

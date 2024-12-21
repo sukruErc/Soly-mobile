@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:solyticket/constants/app_constant.dart';
 import 'package:solyticket/constants/themes.dart';
+import 'package:solyticket/modules/authentication_module/login/view/login_page.dart';
+import 'package:solyticket/modules/booking_module/view/seat_selection_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/events/view/event_page.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/controller/customer_home_controller.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/home/repo/customer_home_repo.dart';
@@ -478,12 +480,13 @@ class CustomerHomePage extends StatelessWidget {
                 fontWeight: FontWeight.bold),
           ),
         ),
-        // InkWell(
-        //     onTap: () {
-        //       controller.isFromTab.value = false;
-        //       Get.toNamed("location");
-        //     },
-        //     child: const SeeAllButton()),
+        InkWell(
+            onTap: () {
+              controller.isFromTab.value = false;
+              // Get.toNamed("location");
+              Get.to(SeatSelectionPage());
+            },
+            child: const SeeAllButton()),
       ],
     );
   }
