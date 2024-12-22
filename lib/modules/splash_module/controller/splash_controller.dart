@@ -10,7 +10,7 @@ class SplashController extends GetxController {
     GlobalClass().getUserId();
     GlobalClass().getRoleType();
     GlobalClass().getName();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 6), () {
       Get.toNamed("customer-dashboard");
     });
   }

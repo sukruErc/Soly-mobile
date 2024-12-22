@@ -26,8 +26,11 @@ import 'package:solyticket/modules/dashboard_module/organizer_dashboard/home/bin
 import 'package:solyticket/modules/dashboard_module/organizer_dashboard/home/view/organizer_home_page.dart';
 import 'package:solyticket/modules/dashboard_module/organizer_dashboard/my_activity/bindings/my_activity_binding.dart';
 import 'package:solyticket/modules/dashboard_module/organizer_dashboard/my_activity/view/my_activity_page.dart';
+import 'package:solyticket/modules/payment_module/bindings/payment_binding.dart';
+import 'package:solyticket/modules/payment_module/view/payment_view.dart';
 import 'package:solyticket/modules/splash_module/bindings/splash_binding.dart';
 import 'package:solyticket/modules/splash_module/view/splash_page.dart';
+
 
 class Routes {
   static String splash = '/splash';
@@ -45,12 +48,13 @@ class Routes {
   static String myActivity = '/my-activity';
   static String seatCategorySelc = '/seat-category-selection';
   static String seatSelection = '/seat-selection';
+  static String payment = '/payment';
 }
 
 final getPages = [
   GetPage(
       name: Routes.splash,
-      page: () => const SplashPage(),
+      page: () =>  const SplashPage(),
       binding: SplashBinding()),
   GetPage(
       name: Routes.login,
@@ -95,7 +99,7 @@ final getPages = [
       binding: MyActivityBinding()),
   GetPage(
       name: Routes.customerDashboard,
-      page: () => const CustomerDashboardPage(),
+      page: () =>  CustomerDashboardPage(),
       binding: CustomerDashboardBinding()),
   GetPage(
       name: Routes.organizerDashboard,
@@ -109,5 +113,10 @@ final getPages = [
     name: Routes.seatSelection,
     page: () => SeatSelectionPage(),
     binding: SeatSelectionBinding()
+  ),
+    GetPage(
+    name: Routes.payment,
+    page: () => PaymentPage(),
+    binding: PaymentBinding()
   ),
 ];

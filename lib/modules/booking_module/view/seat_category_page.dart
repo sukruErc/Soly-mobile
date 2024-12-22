@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:solyticket/constants/themes.dart';
 import 'package:solyticket/modules/booking_module/controller/seat_category_controller.dart';
 import 'package:solyticket/utills/snippets.dart';
-import 'package:solyticket/utills/strings.dart';
 import 'package:solyticket/widgets/app_layout.dart';
 import 'package:solyticket/widgets/custom_loader_button.dart';
 
@@ -15,9 +14,9 @@ class SeatCategoryPage extends GetView<SeatCategoryController> {
   @override
   Widget build(BuildContext context) {
     return DefaultAppLayout(
-      title: const Text("Seat Category"),
+      title: const Text("Bilet Kategorisi"),
       isAppBar: true,
-      leading: backButton(),
+      leading: geriTusu(),
       child: Column(
         children: [
           verticalGap(15),
@@ -26,7 +25,7 @@ class SeatCategoryPage extends GetView<SeatCategoryController> {
                 child: DropdownButtonFormField<String>(
                   value: controller.selectedCategory.value,
                   decoration: InputDecoration(
-                    hintText: 'Select Sort Order...',
+                    hintText: 'Sıralama Sırasını Seçin...',
                     suffixIcon: controller.selectedCategory.value == null
                         ? null
                         : IconButton(
@@ -50,6 +49,7 @@ class SeatCategoryPage extends GetView<SeatCategoryController> {
                   ),
                   onChanged: (newValue) {
                     controller.selectedCategory.value = newValue;
+                    controller.updateBlocks(newValue);
                   },
                   items: controller.seatCategories.value.data?.categories
                       .map<DropdownMenuItem<String>>((Category value) {
@@ -61,12 +61,54 @@ class SeatCategoryPage extends GetView<SeatCategoryController> {
                 ),
               )),
           verticalGap(15),
+          Obx(() => controller.availableBlocks.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: DropdownButtonFormField<String>(
+                    value: controller.selectedBlock.value,
+                    decoration: InputDecoration(
+                      hintText: 'Blok Seçin...',
+                      suffixIcon: controller.selectedBlock.value == null
+                          ? null
+                          : IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                controller.selectedBlock.value = null;
+                              }),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide:
+                            BorderSide(color: DefaultTheme().textFieldColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide:
+                            BorderSide(color: DefaultTheme().textFieldColor),
+                      ),
+                    ),
+                    onChanged: (newValue) {
+                      controller.selectedBlock.value = newValue;
+                    },
+                    items: controller.availableBlocks
+                        .map<DropdownMenuItem<String>>((block) {
+                      return DropdownMenuItem<String>(
+                        value: block.id,
+                        child: Text(block.label),
+                      );
+                    }).toList(),
+                  ),
+                )
+              : SizedBox()),
+          verticalGap(15),
           Obx(() => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: DropdownButtonFormField<String>(
                   value: controller.numberOfPerson.value,
                   decoration: InputDecoration(
-                    hintText: 'Select Sort Order...',
+                    hintText: 'Kisi Sayısını Seçin...',
                     suffixIcon: controller.numberOfPerson.value == null
                         ? null
                         : IconButton(
@@ -101,23 +143,31 @@ class SeatCategoryPage extends GetView<SeatCategoryController> {
                 ),
               )),
           const Spacer(),
-          SizedBox(width:Get.width,child: CustomLoaderButton(
-            btnText: AppStrings.done,
-            radius: 0,
-            onTap: () async {
-              if(controller.numberOfPerson.value!=null||controller.numberOfPerson.value!=null){
-                Get.toNamed("seat-selection",arguments: [controller.eventId.value,controller.selectedCategory.value]);
-              }else{
-                snack(AppStrings.selectBookingCg, isError: true);
-              }
-            }, isLoading: false,
-          ))
+          SizedBox(
+              width: Get.width,
+              child: CustomLoaderButton(
+                btnText: "Koltuk Seçimine Geçin",
+                radius: 0,
+                onTap: () async {
+                  if (controller.isSelectionComplete()) {
+                    Get.toNamed("seat-selection", arguments: [
+                      controller.eventId.value,
+                      controller.selectedCategory.value,
+                      controller.selectedBlock.value,
+                      controller.numberOfPerson.value
+                    ]);
+                  } else {
+                    snack("Lütfen tüm seçimleri yapın!", isError: true);
+                  }
+                },
+                isLoading: false,
+              ))
         ],
       ),
     );
   }
 
-  backButton() {
+  geriTusu() {
     return IconButton(
         padding: const EdgeInsets.only(right: 3),
         onPressed: () {

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: DefaultTheme().base,
-      title: 'Flutter',
+      title: 'Solyticket',
       initialRoute: Routes.splash,
       getPages: getPages,
       initialBinding: InternetConnectivityBinding(),

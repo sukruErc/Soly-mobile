@@ -30,5 +30,13 @@ class AppConstants {
   static const String getUserTickets = 'users/get-tickets-of-user';
   static const String similarEvents = 'events/get-similar-events';
   static const String eventTickets = 'ticket/get-event-tickets-for-sell';
-  
+  static const String getSeatCategories =
+      'ticket/get-event-category-block-entity-by-mobile';
+  static const String getSeats = 'ticket/get-event-seats-by-mobile';
+  static const String getlocationsSeats =
+      'homepage/get-locations-with-avaible-seating-block';
+  static const String holdTicket = 'ticket/hold-ticket';
+  static const String unholdTicket = 'ticket/unhold-ticket';
+  static const String sellTicket = 'ticket/sell-ticket';
+    static const String applyCoupon = 'collection/apply-coupon';
 }

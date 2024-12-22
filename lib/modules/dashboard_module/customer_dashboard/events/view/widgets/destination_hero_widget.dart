@@ -79,7 +79,7 @@ class DestinationHero extends StatelessWidget {
 class DestinationImage extends StatelessWidget {
   final String image;
 
-  const DestinationImage({required this.image, Key? key}) : super(key: key);
+  const DestinationImage({required this.image, super.key});
 
   @override
   Widget build(BuildContext context) {

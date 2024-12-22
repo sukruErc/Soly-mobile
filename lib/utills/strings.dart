@@ -44,4 +44,7 @@ class AppStrings {
 
   // Etkinlik Detayları
   static String eventDetailTitle = "Etkinlik Detayı";
+    static String done = "Koltuk Seçimi";
+    static String selectBookingCg = "Koltuk Seçimi";
+    
 }

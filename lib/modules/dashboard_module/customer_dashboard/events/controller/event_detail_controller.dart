@@ -28,9 +28,9 @@ class EventDetailController extends GetxController {
       isDetailLoading(true);
       final response = await eventDetailRepo.fetchEventDetail(eventId);
       if (response != null && response.statusCode == 200) {
-        print(response.data);
+
         var detail = jsonDecode(response.data);
-        print(detail);
+
         if (detail["success"] == true) {
           eventDetail.value = EventDetailJson.fromJson(detail);
         }

@@ -61,12 +61,12 @@ class TourPreparations extends StatelessWidget {
                       child: SizedBox(
                         width: double.infinity,
                         height: 200,
-                        child: HtmlElementView(
-                          viewType: 'iframe-map',
-                          onPlatformViewCreated: (int viewId) {
-                            // Handle iframe map view
-                          },
-                        ),
+                        // child: HtmlElementView(
+                        //   viewType: 'iframe-map',
+                        //   onPlatformViewCreated: (int viewId) {
+                        //     // Handle iframe map view
+                        //   },
+                        // ),
                       ),
                     ),
                   ),

@@ -6,7 +6,7 @@ import 'package:solyticket/providers/api_client.dart';
 class CollectionBindings extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => CollectionController(
+    Get.lazyPut<CollectionController>(() => CollectionController(
           repo: CollectionRepo(apiClient: ApiClient()),
         ));
   }

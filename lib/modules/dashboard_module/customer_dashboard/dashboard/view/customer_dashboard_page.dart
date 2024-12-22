@@ -48,88 +48,104 @@ class CustomerDashboardPage extends GetView<CustomerDashboardController> {
               ),
             ],
           ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+          child: StylishBottomBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            option: AnimatedBarOptions(
+              inkEffect: false,
+              barAnimation: BarAnimation.fade,
+              padding: const EdgeInsets.all(5),
+              iconStyle: IconStyle.animated,
+              opacity: 0.5,
             ),
-            child: StylishBottomBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              option: AnimatedBarOptions(
-                inkEffect: false,
-                barAnimation: BarAnimation.fade,
-                padding: const EdgeInsets.all(5),
-                iconStyle: IconStyle.animated,
-                opacity: 0.5,
+            hasNotch: true,
+            fabLocation: StylishBarFabLocation.center,
+            currentIndex: controller.bottomSelectedIndex.value,
+            onTap: (index) {
+              controller.bottomSelectedIndex.value = index;
+              controller.bottomController.jumpToPage(index);
+            },
+            items: [
+              BottomBarItem(
+                icon: const Icon(Icons.house_outlined),
+                selectedIcon: const Icon(Icons.house_rounded),
+                selectedColor: DefaultTheme().primaryColor,
+                unSelectedColor: DefaultTheme().greyColor,
+                title: const Text('Ana Sayfa'),
               ),
-              hasNotch: true,
-              fabLocation: StylishBarFabLocation.center,
-              currentIndex: controller.bottomSelectedIndex.value,
-              onTap: (index) {
-                controller.bottomSelectedIndex.value = index;
-                controller.bottomController.jumpToPage(index);
-              },
-              items: [
-                BottomBarItem(
-                  icon: const Icon(Icons.house_outlined),
-                  selectedIcon: const Icon(Icons.house_rounded),
-                  selectedColor: DefaultTheme().primaryColor,
-                  unSelectedColor: DefaultTheme().greyColor,
-                  title: const Text('Ana Sayfa'),
-                ),
-                BottomBarItem(
-                  icon: const Icon(Icons.search),
-                  selectedIcon: const Icon(Icons.search),
-                  selectedColor: DefaultTheme().primaryColor,
-                  unSelectedColor: DefaultTheme().greyColor,
-                  title: const Text('Etkinlikler'),
-                ),
-                BottomBarItem(icon: const SizedBox(), title: const SizedBox()),
-                BottomBarItem(
-                  icon: const Icon(Icons.collections_bookmark_outlined),
-                  selectedIcon: const Icon(Icons.collections_bookmark),
-                  selectedColor: DefaultTheme().primaryColor,
-                  unSelectedColor: DefaultTheme().greyColor,
-                  title: const Text('Koleksiyon'),
-                ),
-                BottomBarItem(
-                  icon: const Icon(Icons.person_outline),
-                  selectedIcon: const Icon(Icons.person),
-                  selectedColor: DefaultTheme().primaryColor,
-                  unSelectedColor: DefaultTheme().greyColor,
-                  title: const Text('Profil'),
-                ),
-              ],
-            ),
-          ),
-        ),
-        floatingActionButton: ClipRRect(
-          borderRadius: BorderRadius.circular(40),
-          child: Container(
-            height: 75,
-            width: 75,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.black26),
-            ),
-            padding: const EdgeInsets.all(1),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: FloatingActionButton(
-                onPressed: () async {},
-                backgroundColor: DefaultTheme().whiteColor,
-                child: Image.asset(
-                  AppImages.logo,
+              BottomBarItem(
+                icon: const Icon(Icons.search),
+                selectedIcon: const Icon(Icons.search),
+                selectedColor: DefaultTheme().primaryColor,
+                unSelectedColor: DefaultTheme().greyColor,
+                title: const Text('Etkinlikler'),
+              ),
+              BottomBarItem(
+                icon: Container(
                   height: 60,
                   width: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      AppImages.logo,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
                 ),
+                selectedIcon: Container(
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      AppImages.logo,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                ),
+                selectedColor: Colors.transparent,
+                unSelectedColor: Colors.transparent,
+                title: const SizedBox.shrink(),
               ),
-            ),
+              BottomBarItem(
+                icon: const Icon(Icons.collections_bookmark_outlined),
+                selectedIcon: const Icon(Icons.collections_bookmark),
+                selectedColor: DefaultTheme().primaryColor,
+                unSelectedColor: DefaultTheme().greyColor,
+                title: const Text('Koleksiyon'),
+              ),
+              BottomBarItem(
+                icon: const Icon(Icons.person_outline),
+                selectedIcon: const Icon(Icons.person),
+                selectedColor: DefaultTheme().primaryColor,
+                unSelectedColor: DefaultTheme().greyColor,
+                title: const Text('Profil'),
+              ),
+            ],
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }

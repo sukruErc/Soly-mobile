@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-
 import 'package:solyticket/model/collection_model.dart';
 import 'package:solyticket/model/coupon_model.dart';
 import 'package:solyticket/modules/dashboard_module/customer_dashboard/collection/repo/collection_repo.dart';
@@ -26,20 +24,21 @@ class CollectionController extends GetxController {
   void fetchCollections() async {
     try {
       isLoading.value = true;
-
-      var response = await repo.getCollections(GlobalClass.userId);
-
-      if (response?.data != null) {
-        var rawData = jsonDecode(response!.data);
-
-        if (rawData['success'] == true && rawData['data'] is List) {
-          var data = rawData['data'] as List;
-
-          collections.assignAll(
-            data.map((e) => CollectionModel.fromJson(e as Map<String, dynamic>)).toList(),
-          );
-        } else {
-          throw Exception("Unexpected response format: $rawData");
+      if (GlobalClass.userId != "") {
+        var response = await repo.getCollections(GlobalClass.userId);
+        if (response?.data != null) {
+          var rawData = jsonDecode(response!.data);
+          if (rawData['success'] == true && rawData['data'] is List) {
+            var data = rawData['data'] as List;
+            collections.assignAll(
+              data
+                  .map((e) =>
+                      CollectionModel.fromJson(e as Map<String, dynamic>))
+                  .toList(),
+            );
+          } else {
+            throw Exception("Unexpected response format: $rawData");
+          }
         }
       }
     } catch (e) {
@@ -56,8 +55,8 @@ class CollectionController extends GetxController {
   void redeemCoupon(String userId, String collectionId) async {
     try {
       isLoading.value = true;
-      var response = await repo.redeemCoupon({"userId": GlobalClass.userId, "collectionId": collectionId});
-
+      var response = await repo.redeemCoupon(
+          {"userId": GlobalClass.userId, "collectionId": collectionId});
       if (response?.data != null) {
         var coupon = CouponModel.fromJson(response!.data);
         collections.value = collections.map((col) {
@@ -80,30 +79,24 @@ class CollectionController extends GetxController {
 
   void onRedeemCoupon(CollectionModel collection) async {
     if (collection == null) return;
-
     try {
       isLoading.value = true;
-
       var response = await repo.redeemCoupon({
         "userId": GlobalClass.userId,
         "collectionId": collection.id,
       });
-
       if (response?.data != null) {
         var responseData = response?.data['data'];
         if (responseData == null) {
           throw Exception("Geçersiz yanıt verisi");
         }
-
         var coupon = CouponModel.fromJson(responseData);
-
         collections.value = collections.map((col) {
           if (col.id == collection.id) {
             col.coupons.add(coupon);
           }
           return col;
         }).toList();
-
         Get.snackbar(
           "Başarılı",
           "Kupon başarıyla alındı: ${coupon.code}",
@@ -113,8 +106,8 @@ class CollectionController extends GetxController {
         throw Exception("Beklenmedik yanıt formatı: ${response?.data}");
       }
     } catch (e) {
-      // Attempt to extract error message from the backend
-      String errorMessage = "Kupon alma işlemi başarısız. Lütfen daha sonra tekrar deneyin.";
+      String errorMessage =
+          "Kupon alma işlemi başarısız. Lütfen daha sonra tekrar deneyin.";
       if (e is DioException && e.response?.data != null) {
         try {
           var errorData = e.response?.data;
@@ -122,11 +115,8 @@ class CollectionController extends GetxController {
             errorData = jsonDecode(errorData);
           }
           errorMessage = errorData['message'] ?? errorMessage;
-        } catch (_) {
-          // Fallback to default error message if parsing fails
-        }
+        } catch (_) {}
       }
-
       Get.snackbar(
         "Hata",
         errorMessage,

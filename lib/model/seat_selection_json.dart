@@ -1,78 +1,101 @@
-// To parse this JSON data, do
-//
-//     final seatSelectionJson = seatSelectionJsonFromJson(jsonString);
-
 import 'dart:convert';
-
-import 'package:book_my_seat/book_my_seat.dart';
-
-SeatSelectionJson seatSelectionJsonFromJson(String str) => SeatSelectionJson.fromJson(json.decode(str));
 
 class SeatSelectionJson {
   bool? success;
   DateTime? date;
   String? message;
-  List<Datum>? data;
+  Block? data;
 
   SeatSelectionJson({
     this.success,
     this.date,
     this.message,
-    required this.data,
+    this.data,
   });
 
   factory SeatSelectionJson.fromJson(Map<String, dynamic> json) => SeatSelectionJson(
-    success: json["success"],
-    date: DateTime.parse(json["date"]),
-    message: json["message"],
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
-  );
+        success: json["success"],
+        date: DateTime.parse(json["date"]),
+        message: json["message"],
+        data: json["data"] != null ? Block.fromJson(json["data"]) : null,
+      );
 }
 
-class Datum {
-  String id;
-  String name;
-  int numOfRows;
-  int numOfColumns;
-  List<List<Seat>> seats;
+class Block {
+  String? id;
+  int? numOfRows;
+  int? numOfColumns;
+  String? name;
+  String? locationId;
+    String? eventName;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  
+  List<List<Seat>>? seats;
 
-  Datum({
-    required this.id,
-    required this.name,
-    required this.numOfRows,
-    required this.numOfColumns,
-    required this.seats,
+  Block({
+    this.id,
+    this.numOfRows,
+    this.numOfColumns,
+    this.name,
+    this.locationId,
+    this.eventName,
+    this.createdAt,
+    this.updatedAt,
+    this.seats,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-    id: json["id"],
-    name: json["name"],
-    numOfRows: json["numOfRows"],
-    numOfColumns: json["numOfColumns"],
-    seats: List<List<Seat>>.from(json["seats"].map((x) => List<Seat>.from(x.map((x) => seatValues.map[x]!)))),
-  );
+  factory Block.fromJson(Map<String, dynamic> json) => Block(
+        id: json["id"],
+        numOfRows: int.tryParse(json["numOfRows"] ?? "0"),
+        numOfColumns: int.tryParse(json["numOfColumns"] ?? "0"),
+        name: json["name"],
+        locationId: json["locationId"],
+        eventName: json["eventName"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
+        seats: json["seats"] != null
+            ? List<List<Seat>>.from(
+                json["seats"].map((row) => List<Seat>.from(row.map((seat) => Seat.fromJson(seat)))))
+            : null,
+      );
 }
 
-enum Seat {
-  AVAILABLE,
-  EMPTY,
-  RESERVED
-}
+class Seat {
+  String? id;
+  int? seatNumber;
+  String? title;
+  bool empty;
+  int? row;
+  int? column;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? seatingBlockId;
+  String status;
 
-final seatValues = EnumValues({
-  "available": Seat.AVAILABLE,
-  "empty": Seat.EMPTY,
-  "reserved": Seat.RESERVED
-});
+  Seat({
+    this.id,
+    this.seatNumber,
+    this.title,
+    required this.empty,
+    this.row,
+    this.column,
+    this.createdAt,
+    this.updatedAt,
+    this.seatingBlockId,
+    required this.status,
+  });
 
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
+  factory Seat.fromJson(Map<String, dynamic> json) => Seat(
+        id: json["id"],
+        seatNumber: json["seatNumber"],
+        title: json["title"],
+        empty: json["empty"] ?? false,
+        row: json["row"],
+        column: json["column"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
+        seatingBlockId: json["seatingBlockId"],
+        status: json["status"],
+      );
 }
