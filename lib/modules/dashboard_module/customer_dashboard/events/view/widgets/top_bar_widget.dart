@@ -112,7 +112,7 @@ class TopBarWidget extends StatelessWidget {
             //   backgroundColor: Colors.blue,
             //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             // ),
-            child: const Text("Buy Now"),
+            child: const Text("Satın Alın"),
           ),
         ],
       ),

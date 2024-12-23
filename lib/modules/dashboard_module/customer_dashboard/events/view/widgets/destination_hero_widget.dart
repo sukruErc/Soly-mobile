@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:solyticket/constants/app_constant.dart';
 import 'package:solyticket/constants/themes.dart';
 
@@ -129,7 +130,9 @@ class PriceCard extends StatelessWidget {
               children: [
                 Icon(Icons.calendar_today, color: DefaultTheme().primaryColor),
                 const SizedBox(width: 8),
-                Text(date,
+                Text(DateFormat('dd-MM-yyyy').format(
+                                DateTime.parse(date),
+                              ),
                     style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.w500)),
               ],

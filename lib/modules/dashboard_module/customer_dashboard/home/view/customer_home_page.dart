@@ -38,31 +38,7 @@ class CustomerHomePage extends StatelessWidget {
         title: Center(
           child: AppBarLogo().setLogo(),
         ),
-        action: [
-          GlobalClass.isLogin
-              ? InkWell(
-                  onTap: () async {
-                    await GlobalClass().resetUserInfo();
-                    Get.toNamed("login");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 15.0),
-                    child: Text(
-                      AppStrings.logout,
-                      style: textDesigner(
-                        16,
-                        fontWeight: FontWeight.w600,
-                        DefaultTheme().primaryColor,
-                      ),
-                    ),
-                  ),
-                )
-              : IconButton(
-                  onPressed: () {
-                    Get.toNamed("login");
-                  },
-                  icon: const Icon(Icons.lock))
-        ],
+        
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.only(top: 40, left: 15, right: 15),

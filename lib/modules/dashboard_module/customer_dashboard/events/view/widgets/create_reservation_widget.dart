@@ -1,134 +1,214 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:solyticket/constants/themes.dart';
+import 'package:solyticket/utills/global.dart';
+import 'package:solyticket/model/ticket_detail_json.dart';
 
-class CreateTourReservation extends StatelessWidget {
+class CreateTourReservation extends StatefulWidget {
   final List<LabelValueEntity> persons;
   final List<LabelValueEntity> categoryPrices;
-  // final String shortCode;
-  // final String normalizedEventName;
+  final EventTicketsResponse? tickets;
 
   const CreateTourReservation({
+    Key? key,
     required this.persons,
     required this.categoryPrices,
-    // required this.shortCode,
-    // required this.normalizedEventName,
-    Key? key,
+    this.tickets,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    String? selectedPerson;
-    String? selectedCategory;
-    bool buttonDisabled = false;
-    String buttonText = "Rezervasyon Durumu";
+  _CreateTourReservationState createState() => _CreateTourReservationState();
+}
 
-    // Replace these with actual logic for tickets
-    final bool hasPurchasedTickets = false;
-    final bool hasHeldTickets = false;
-    final int countdown = 0; // Countdown logic would go here
+class _CreateTourReservationState extends State<CreateTourReservation> {
+  LabelValueEntity? selectedPerson;
+  LabelValueEntity? selectedCategory;
+  int? countdown;
+  bool showPopup = false;
 
-    if (hasPurchasedTickets) {
-      buttonText = "Satın Aldınız";
-      buttonDisabled = true;
-    } else if (hasHeldTickets && countdown > 0) {
-      final minutes = (countdown / 60).floor();
-      final seconds = countdown % 60;
-      buttonText = "Sepete Git ($minutes:${seconds.toString().padLeft(2, '0')})";
-    } else if (categoryPrices.isEmpty) {
-      buttonText = "Tükendi";
-      buttonDisabled = true;
+  @override
+  void initState() {
+    super.initState();
+    _initializeCountdown();
+  }
+
+  void _initializeCountdown() {
+    if (widget.tickets?.data.userHeldTickets.isNotEmpty == true) {
+      final heldUntil =
+          DateTime.parse(widget.tickets!.data.userHeldTickets[0].heldUntil as String);
+      final now = DateTime.now();
+      setState(() {
+        countdown = heldUntil.difference(now).inSeconds;
+      });
+      if (countdown! > 0) {
+        _startCountdown();
+      }
+    }
+  }
+
+  void _startCountdown() {
+    Future.doWhile(() async {
+      if (countdown != null && countdown! > 0) {
+        await Future.delayed(const Duration(seconds: 1));
+        setState(() {
+          countdown = countdown! - 1;
+        });
+        return true;
+      }
+      return false;
+    });
+  }
+
+String _getButtonText() {
+  final userHeldTickets = widget.tickets?.data.userHeldTickets ?? [];
+  final userPurchasedTickets = widget.tickets?.data.userPurchasedTickets ?? [];
+  final availableTickets = widget.tickets?.data.availableTickets ?? [];
+
+  if (userPurchasedTickets.isNotEmpty) {
+    return "Satın Aldınız";
+  } else if (userHeldTickets.isNotEmpty) {
+    if (countdown != null && countdown! > 0) {
+      final minutes = (countdown! / 60).floor();
+      final seconds = countdown! % 60;
+      return "Sepete Git (${minutes}:${seconds.toString().padLeft(2, '0')})";
+    } else {
+      return "Sepete Ekle";
+    }
+  } else if (availableTickets.isEmpty) {
+    return "Tükendi";
+  }
+  return "Rezervasyon Durumu";
+}
+
+
+  bool _isButtonDisabled() {
+    final userHeldTickets = widget.tickets?.data.userHeldTickets ?? [];
+    final userPurchasedTickets = widget.tickets?.data.userPurchasedTickets ?? [];
+    final availableTickets = widget.tickets?.data.availableTickets ?? [];
+
+    if (userPurchasedTickets.isNotEmpty || availableTickets.isEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  void _handleSubmit() {
+    final userId = GlobalClass.userId;
+    if (userId == null || userId.isEmpty) {
+      setState(() {
+        showPopup = true;
+      });
+      return;
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Hadi Başlayalım!",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Color(0xFFD2D2D2)),
+    final queryParams = {
+      "category": selectedCategory?.value ?? "",
+      "numberOfPerson": selectedPerson?.value ?? "",
+    };
+
+    if (widget.tickets?.data.userHeldTickets.isNotEmpty == true) {
+      final heldTicketIds =
+          widget.tickets!.data.userHeldTickets.map((e) => e.id).join(",");
+      // Get.toNamed(
+      //   "/events/payment/${widget.data.normalizedEventName}/${widget.shortCode}?tickets=$heldTicketIds",
+      // );
+    } else {
+      final query = queryParams.entries.map((e) => "${e.key}=${e.value}").join("&");
+      // Get.toNamed(
+      //   "/events/payment/${widget.normalizedEventName}/${widget.shortCode}?$query",
+      // );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Hadi Başlayalım!",
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.w600, color: Color(0xFFD2D2D2)),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          "Rezervasyon oluşturun",
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 24),
+        DropdownButtonFormField<LabelValueEntity>(
+          decoration: InputDecoration(
+            labelText: "Kişi Sayısı Seçiniz",
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          const SizedBox(height: 4),
-          const Text(
-            "Rezervasyon oluşturun",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            "Kişi sayısı ve kategori seçiniz",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String>(
-            decoration: InputDecoration(
-              labelText: "Kişi Sayısı Seçiniz",
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            items: persons.map((person) {
-              return DropdownMenuItem(
-                value: person.value,
-                child: Text(person.label),
-              );
-            }).toList(),
-            onChanged: (value) {
+          items: widget.persons.map((person) {
+            return DropdownMenuItem(
+              value: person,
+              child: Text(person.label),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
               selectedPerson = value;
-            },
+            });
+          },
+        ),
+        const SizedBox(height: 16),
+        DropdownButtonFormField<LabelValueEntity>(
+          decoration: InputDecoration(
+            labelText: "Kategori Seçiniz",
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String>(
-            decoration: InputDecoration(
-              labelText: "Kategori Seçiniz",
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            items: categoryPrices.map((category) {
-              return DropdownMenuItem(
-                value: category.value,
-                child: Text(category.label),
-              );
-            }).toList(),
-            onChanged: (value) {
+          items: widget.categoryPrices.map((category) {
+            return DropdownMenuItem(
+              value: category,
+              child: Text(category.label),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
               selectedCategory = value;
-            },
+            });
+          },
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: _isButtonDisabled() ? null : _handleSubmit,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _isButtonDisabled()
+                ? Colors.grey
+                :  DefaultTheme().primaryColor,
+            minimumSize: const Size.fromHeight(50),
           ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: buttonDisabled ? null : () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: buttonDisabled ? Colors.grey : DefaultTheme().primaryColor,
-              minimumSize: const Size.fromHeight(50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          child: Text(_getButtonText(), style: TextStyle( color: Colors.white),),
+        ),
+        if (showPopup)
+          AlertDialog(
+            title: const Text("Giriş veya Kayıt Ol"),
+            content: const Text(
+                "Lütfen satın alma işlemine devam etmek için giriş yapın veya kayıt olun."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    showPopup = false;
+                  });
+                  Get.toNamed("login");
+                },
+                child: const Text("Giriş Yap"),
               ),
-            ),
-            child: Text(buttonText, style: const TextStyle(fontSize: 16)),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    showPopup = false;
+                  });
+                  Get.toNamed("registration");
+                },
+                child: const Text("Kayıt Ol"),
+              ),
+            ],
           ),
-          const SizedBox(height: 32),
-          const Text(
-            "Kategori Fiyatları",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Column(
-            children: categoryPrices.map((category) {
-              return Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(78, 67, 241, 0.05),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(category.label, style: const TextStyle(fontSize: 16)),
-                    Text("1 Kişi x ${category.label} ₺", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
+      ],
     );
   }
 }

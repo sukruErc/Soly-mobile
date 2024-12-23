@@ -9,8 +9,7 @@ import 'widgets/top_bar_widget.dart';
 import 'widgets/destination_hero_widget.dart';
 
 class EventDetailPage extends StatelessWidget {
-  // final EventDetailController controller = Get.find<EventDetailController>();
-final EventDetailController controller = Get.put(
+  final EventDetailController controller = Get.put(
     EventDetailController(
       EventDetailRepo(apiClient: ApiClient()),
       Get.arguments, // Pass arguments here
@@ -21,7 +20,12 @@ final EventDetailController controller = Get.put(
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Event Details"),
+        title: Obx(() {
+          if (controller.isDetailLoading.value || controller.eventDetail.value == null) {
+            return const Text("Yükleniyor...");
+          }
+          return Text(controller.eventDetail.value!.data!.eventName);
+        }),
       ),
       body: Obx(() {
         if (controller.isDetailLoading.value) {
@@ -29,6 +33,23 @@ final EventDetailController controller = Get.put(
         }
 
         final event = controller.eventDetail.value!;
+
+        // Map event data to the required formats
+        final persons = List<LabelValueEntity>.generate(
+          int.parse(event.data!.numberOfPerson),
+          (index) => LabelValueEntity(
+            label: "${index + 1} Kişi",
+            value: "${index + 1}",
+          ),
+        );
+
+        final categoryPrices = event.data!.ticketCategory.map((category) {
+          return LabelValueEntity(
+            label: category.name,
+            value: category.price.toString(),
+          );
+        }).toList();
+
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -37,46 +58,30 @@ final EventDetailController controller = Get.put(
                 price: event.data!.priceLabel,
                 eventId: event.data!.id,
               ),
-               DestinationHero(
+              DestinationHero(
                 eventId: event.data!.id,
                 image: event.data!.image,
-                locationImage: event.data!.location.blockImage ?? "", // Handle nullable
-                locationName: event.data!.location.name ?? "Unknown Location",
-                price: event.data!.priceLabel ?? "Free",
-                normalizedEventName: event.data!.eventName ?? "Event",
+                locationImage: event.data!.location.blockImage ?? "",
+                locationName: event.data!.location.name,
+                price: event.data!.priceLabel,
+                normalizedEventName: event.data!.eventName,
                 date: event.data!.date.toString(),
-                time: event.data!.time ?? "N/A",
-                shortCode: event.data!.shortCode ?? "N/A",
-                highlightsStrings: [event.data!.highlight] ?? [],
-                otherDetailsStrings: [event.data!.desc ]?? [],
-                // persons: [event.data!.numberOfPerson] ?? [],
-                // categoryPrices: event.data!.ca ?? [],
-                // tickets: event.data!.tickets,
+                time: event.data!.time,
+                shortCode: event.data!.shortCode,
+                highlightsStrings: [event.data!.highlight],
+                otherDetailsStrings: [event.data!.desc],
               ),
-              CreateTourReservation(
-          persons: [
-            LabelValueEntity(label: "1 Person", value: "1"),
-            LabelValueEntity(label: "2 Persons", value: "2"),
-            LabelValueEntity(label: "3 Persons", value: "3"),
-          ],
-          categoryPrices: [
-            LabelValueEntity(label: "Category A", value: "A"),
-            LabelValueEntity(label: "Category B", value: "B"),
-            LabelValueEntity(label: "Category C", value: "C"),
-          ],
-          // tickets: TicketsInCreate(
-          //   availableTickets: [],
-          //   userHeldTickets: [],
-          //   userPurchasedTickets: [],
-          // ),
-        ),
+Obx(() => CreateTourReservation(
+  persons: persons,
+  categoryPrices: categoryPrices,
+  tickets: controller.tickets.value,
+)),
+
 
               TourPreparations(
-                // locationInfo: LocationInfo(
-                  mapUrl: event.data!.location.map,
-                  address: event.data!.location.address,
-                  transportation: event.data!.location.transportation
-                // ),
+                mapUrl: event.data!.location.map,
+                address: event.data!.location.address,
+                transportation: event.data!.location.transportation,
               ),
             ],
           ),
